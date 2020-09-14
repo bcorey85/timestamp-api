@@ -93,8 +93,6 @@ class Note {
 		noteId: string | number,
 		update: Update
 	): Promise<NoteModel> => {
-		console.log(noteId, update);
-
 		const note = await db('notes')
 			.update(update)
 			.where({ note_id: noteId })

@@ -9,7 +9,7 @@ const getAllNotes = async (req: Request, res: Response) => {
 
 	const notes = await Note.findAll(user_id);
 
-	if (!notes) {
+	if (notes.length === 0) {
 		throw new NotFoundError();
 	}
 

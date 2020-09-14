@@ -95,3 +95,39 @@ export const createTestNote = async ({
 
 	return note;
 };
+
+export const makeParentItems = async (user_id: string) => {
+	const { project_id } = await createTestProject({
+		title: 'test',
+		description: 'test',
+		userId: user_id,
+		pinned: false
+	});
+
+	const { task_id } = await createTestTask({
+		title: 'test',
+		description: 'test',
+		userId: user_id,
+		projectId: project_id.toString(),
+		pinned: false,
+		tags: [ '#tag1', '#tag2' ]
+	});
+
+	return { project_id, task_id };
+};
+
+export const testNoteBody = async (userId: string) => {
+	const { project_id, task_id } = await makeParentItems(userId as string);
+	return {
+		title: 'test',
+		description: 'test',
+		projectId: project_id,
+		taskId: task_id,
+		userId: userId,
+		pinned: false,
+		hours: 1,
+		startTime: new Date(Date.now() - 1000 * 60 * 60),
+		endTime: new Date(Date.now()),
+		tags: [ '#tag1', '#tag2' ]
+	};
+};

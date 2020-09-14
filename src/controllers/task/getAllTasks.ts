@@ -9,7 +9,7 @@ const getAllTasks = async (req: Request, res: Response) => {
 
 	const tasks = await Task.findAll(user_id);
 
-	if (!tasks) {
+	if (tasks.length === 0) {
 		throw new NotFoundError();
 	}
 

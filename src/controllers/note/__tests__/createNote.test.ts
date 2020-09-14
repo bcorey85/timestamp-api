@@ -2,52 +2,10 @@ import request from 'supertest';
 import { app } from '../../../app';
 import {
 	createMessage,
-	genericMessage,
-	noteMessage,
-	requestValidationMessage
+	genericMessage
 } from '../../../responses/responseStrings';
-import { NewNote, Note } from '../../../models/Note';
-import {
-	createTestProject,
-	createTestTask,
-	createTestUser
-} from '../../../test/setup';
-
-const makeParentItems = async (user_id: string) => {
-	const { project_id } = await createTestProject({
-		title: 'test',
-		description: 'test',
-		userId: user_id,
-		pinned: false
-	});
-
-	const { task_id } = await createTestTask({
-		title: 'test',
-		description: 'test',
-		userId: user_id,
-		projectId: project_id.toString(),
-		pinned: false,
-		tags: [ '#tag1', '#tag2' ]
-	});
-
-	return { project_id, task_id };
-};
-
-const testNote = async (userId: string) => {
-	const { project_id, task_id } = await makeParentItems(userId as string);
-	return {
-		title: 'test',
-		description: 'test',
-		projectId: project_id,
-		taskId: task_id,
-		userId: userId,
-		pinned: false,
-		hours: 1,
-		startTime: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
-		endTime: new Date(Date.now()).toISOString(),
-		tags: [ '#tag1', '#tag2' ]
-	};
-};
+import { Note } from '../../../models/Note';
+import { createTestUser, testNoteBody } from '../../../test/setup';
 
 describe('Create Note Controller', () => {
 	it('creates new note in db', async () => {
@@ -56,7 +14,7 @@ describe('Create Note Controller', () => {
 			'111111'
 		);
 
-		const note = await testNote(user_id);
+		const note = await testNoteBody(user_id);
 
 		const response = await request(app)
 			.post(`/api/notes/${public_user_id}`)
@@ -74,7 +32,7 @@ describe('Create Note Controller', () => {
 			'111111'
 		);
 
-		const note = await testNote(user_id);
+		const note = await testNoteBody(user_id);
 		note.title = '';
 
 		const response = await request(app)
@@ -97,7 +55,7 @@ describe('Create Note Controller', () => {
 			'111111'
 		);
 
-		const note = await testNote(user_id);
+		const note = await testNoteBody(user_id);
 		note.description = '';
 
 		const response = await request(app)
@@ -120,7 +78,7 @@ describe('Create Note Controller', () => {
 			'111111'
 		);
 
-		const note = await testNote(user_id);
+		const note = await testNoteBody(user_id);
 		// @ts-ignore
 		note.taskId = null;
 
@@ -144,7 +102,7 @@ describe('Create Note Controller', () => {
 			'111111'
 		);
 
-		const note = await testNote(user_id);
+		const note = await testNoteBody(user_id);
 		//@ts-ignore
 		note.projectId = null;
 
@@ -168,7 +126,8 @@ describe('Create Note Controller', () => {
 			'111111'
 		);
 
-		const note = await testNote(user_id);
+		const note = await testNoteBody(user_id);
+		//@ts-ignore
 		note.startTime = '';
 
 		const response = await request(app)
@@ -191,7 +150,8 @@ describe('Create Note Controller', () => {
 			'111111'
 		);
 
-		const note = await testNote(user_id);
+		const note = await testNoteBody(user_id);
+		//@ts-ignore
 		note.endTime = '';
 
 		const response = await request(app)
@@ -214,7 +174,7 @@ describe('Create Note Controller', () => {
 			'111111'
 		);
 
-		const note = await testNote(user_id);
+		const note = await testNoteBody(user_id);
 
 		const response = await request(app)
 			.post(`/api/notes/${public_user_id}`)
@@ -241,7 +201,7 @@ describe('Create Note Controller', () => {
 			'111111'
 		);
 
-		const note = await testNote(user_id);
+		const note = await testNoteBody(user_id);
 
 		const response = await request(app)
 			.post(`/api/notes/${public_user_id}`)

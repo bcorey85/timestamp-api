@@ -1,54 +1,15 @@
 import request from 'supertest';
 import { app } from '../../../app';
 import {
-	createMessage,
 	genericMessage,
 	noteMessage
 } from '../../../responses/responseStrings';
 import { Note } from '../../../models/Note';
 import {
 	createTestUser,
-	createTestProject,
 	createTestNote,
-	createTestTask
+	testNoteBody
 } from '../../../test/setup';
-import { Project } from '../../../models/Project';
-
-const makeParentItems = async (user_id: string) => {
-	const { project_id } = await createTestProject({
-		title: 'test',
-		description: 'test',
-		userId: user_id,
-		pinned: false
-	});
-
-	const { task_id } = await createTestTask({
-		title: 'test',
-		description: 'test',
-		userId: user_id,
-		projectId: project_id.toString(),
-		pinned: false,
-		tags: [ '#tag1', '#tag2' ]
-	});
-
-	return { project_id, task_id };
-};
-
-const testNote = async (userId: string) => {
-	const { project_id, task_id } = await makeParentItems(userId as string);
-	return {
-		title: 'test',
-		description: 'test',
-		projectId: project_id,
-		taskId: task_id,
-		userId: userId,
-		pinned: false,
-		hours: 1,
-		startTime: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
-		endTime: new Date(Date.now()).toISOString(),
-		tags: [ '#tag1', '#tag2' ]
-	};
-};
 
 describe('Delete Note Controller', () => {
 	it('deletes note from db', async () => {
@@ -57,7 +18,7 @@ describe('Delete Note Controller', () => {
 			'111111'
 		);
 
-		const noteBody = await testNote(user_id);
+		const noteBody = await testNoteBody(user_id);
 
 		//@ts-ignore
 		const { note_id } = await createTestNote({ ...noteBody });
@@ -80,7 +41,7 @@ describe('Delete Note Controller', () => {
 			'111111'
 		);
 
-		const noteBody = await testNote(user_id);
+		const noteBody = await testNoteBody(user_id);
 		//@ts-ignore
 		const note = await createTestNote({ ...noteBody });
 
@@ -106,7 +67,7 @@ describe('Delete Note Controller', () => {
 			'111111'
 		);
 
-		const noteBody = await testNote(user_id);
+		const noteBody = await testNoteBody(user_id);
 		//@ts-ignore
 		const note = await createTestNote({ ...noteBody });
 
@@ -135,7 +96,7 @@ describe('Delete Note Controller', () => {
 			'111111'
 		);
 
-		const noteBody = await testNote(user_id);
+		const noteBody = await testNoteBody(user_id);
 		//@ts-ignore
 		const note = await createTestNote({ ...noteBody });
 
