@@ -28,6 +28,8 @@ describe('Login Controller', () => {
 	});
 
 	it('throws error if invalid email', async () => {
+		await createTestUser('test2@gmail.com', '123456');
+
 		const user = {
 			email: 'test',
 			password: '123456'
@@ -45,6 +47,8 @@ describe('Login Controller', () => {
 	});
 
 	it('throws error if invalid password', async () => {
+		await createTestUser('test2@gmail.com', '123456');
+
 		const user = {
 			email: 'test@gmail.com',
 			password: '123'
@@ -57,6 +61,44 @@ describe('Login Controller', () => {
 		expect(response.body.success).toBe(false);
 		expect(response.body.errors[0].message).toEqual(
 			requestValidationMessage.error.password
+		);
+		expect(response.body).not.toHaveProperty('data');
+	});
+
+	it('throws error if user does not exist', async () => {
+		await createTestUser('test@gmail.com', '123456');
+
+		const loginReq = {
+			email: 'test2@gmail.com',
+			password: '123456'
+		};
+		const response = await request(app)
+			.post('/api/auth/login')
+			.send(loginReq)
+			.expect(400);
+
+		expect(response.body.success).toBe(false);
+		expect(response.body.errors[0].message).toEqual(
+			authMessage.error.invalidCredentials
+		);
+		expect(response.body).not.toHaveProperty('data');
+	});
+
+	it('throws error if password does not match', async () => {
+		await createTestUser('test@gmail.com', '123456');
+
+		const loginReq = {
+			email: 'test@gmail.com',
+			password: '234567'
+		};
+		const response = await request(app)
+			.post('/api/auth/login')
+			.send(loginReq)
+			.expect(400);
+
+		expect(response.body.success).toBe(false);
+		expect(response.body.errors[0].message).toEqual(
+			authMessage.error.invalidCredentials
 		);
 		expect(response.body).not.toHaveProperty('data');
 	});

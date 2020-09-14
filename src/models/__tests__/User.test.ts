@@ -83,18 +83,38 @@ describe('Compare Password', () => {
 });
 
 describe('Update user', () => {
-	it('update user in db', async () => {
+	it('updates user in db', async () => {
 		const user = await User.create('test@gmail.com', '123456');
 
+		const newEmail = 'test2@gmail.com';
 		await User.update(user.public_user_id, {
-			email: 'test2@gmail.com'
+			email: newEmail
 		});
 
 		const updatedUser = await User.find({
 			public_user_id: user.public_user_id
 		});
 
-		expect(updatedUser.email).toBe('test2@gmail.com');
+		expect(updatedUser.email).toBe(newEmail);
+	});
+
+	it('prevents updating password directly', async () => {
+		const user = await User.create('test@gmail.com', '123456');
+
+		const newPass = '111111';
+		const newEmail = 'test2@gmail.com';
+		await User.update(user.public_user_id, {
+			password: newPass,
+			email: newEmail
+		});
+
+		const updatedUser = await User.find({
+			public_user_id: user.public_user_id
+		});
+
+		const passMatch = await User.comparePassword(updatedUser, newPass);
+
+		expect(passMatch).toBe(false);
 	});
 });
 
