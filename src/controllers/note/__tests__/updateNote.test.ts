@@ -12,7 +12,7 @@ import {
 } from '../../../test/setup';
 
 describe('Update Note Controller', () => {
-	it.only('update note in db', async () => {
+	it('update note in db', async () => {
 		const { public_user_id, user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
@@ -25,7 +25,7 @@ describe('Update Note Controller', () => {
 		const update = {
 			title: 'test2',
 			description: 'test2',
-			tags: null,
+			tags: [ '#tag1', '#tag2' ],
 			startTime: new Date(Date.now() - 1000 * 60 * 60),
 			endTime: new Date(Date.now()),
 			hours: 1,
