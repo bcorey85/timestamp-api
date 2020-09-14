@@ -1,6 +1,7 @@
 import { db } from '../db';
 
 export interface NoteModel {
+	note_id: number;
 	task_id: number;
 	project_id: number;
 	user_id: number;
@@ -92,6 +93,8 @@ class Note {
 		noteId: string | number,
 		update: Update
 	): Promise<NoteModel> => {
+		console.log(noteId, update);
+
 		const note = await db('notes')
 			.update(update)
 			.where({ note_id: noteId })
