@@ -58,7 +58,7 @@ const createNote = async (req: Request, res: Response) => {
 		data: {}
 	});
 
-	res.status(200).send(response.body);
+	res.status(201).send(response.body);
 };
 
 export { createNote };

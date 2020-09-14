@@ -13,7 +13,7 @@ export interface ProjectModel {
 	updated_at: Date;
 }
 
-interface NewProject {
+export interface NewProject {
 	title: string;
 	description: string;
 	pinned: boolean;

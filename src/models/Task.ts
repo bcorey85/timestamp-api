@@ -14,7 +14,7 @@ export interface TaskModel {
 	updated_at: Date;
 }
 
-interface NewTask {
+export interface NewTask {
 	title: string;
 	description: string;
 	projectId: string;

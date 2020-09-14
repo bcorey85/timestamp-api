@@ -15,7 +15,7 @@ export interface NoteModel {
 	updated_at: Date;
 }
 
-interface NewNote {
+export interface NewNote {
 	title: string;
 	description: string;
 	projectId: string;
