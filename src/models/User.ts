@@ -87,7 +87,10 @@ class User {
 		const hashed = await bcrypt.hash(password, 10);
 
 		await db('users')
-			.update({ password: hashed })
+			.update({
+				password: hashed,
+				updated_at: new Date(Date.now())
+			})
 			.where({ public_user_id: userid });
 	};
 

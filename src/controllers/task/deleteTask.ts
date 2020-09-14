@@ -24,7 +24,8 @@ const deleteTask = async (req: Request, res: Response) => {
 	await Project.update(task.project_id, {
 		tasks: project.tasks - 1,
 		hours: project.hours - task.hours,
-		notes: project.notes - task.notes
+		notes: project.notes - task.notes,
+		updated_at: new Date(Date.now())
 	});
 
 	await Task.delete(taskId);

@@ -9,7 +9,7 @@ const getAllProjects = async (req: Request, res: Response) => {
 
 	const projects = await Project.findAll(user_id);
 
-	if (!projects) {
+	if (projects.length === 0) {
 		throw new NotFoundError();
 	}
 

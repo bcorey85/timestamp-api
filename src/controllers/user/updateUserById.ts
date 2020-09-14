@@ -13,7 +13,10 @@ const updateUserById = async (req: Request, res: Response) => {
 	}
 
 	if (req.body.email) {
-		await User.update(userId, { email });
+		await User.update(userId, {
+			email,
+			updated_at: new Date(Date.now())
+		});
 	}
 
 	const response = new SuccessResponse({

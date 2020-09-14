@@ -23,7 +23,8 @@ const updateTask = async (req: Request, res: Response) => {
 		title,
 		description,
 		tags: tagString || null,
-		pinned
+		pinned,
+		updated_at: new Date(Date.now())
 	});
 
 	const response = new SuccessResponse({

@@ -17,7 +17,8 @@ const updateProject = async (req: Request, res: Response) => {
 	await Project.update(projectId, {
 		title,
 		description,
-		pinned
+		pinned,
+		updated_at: new Date(Date.now())
 	});
 
 	const response = new SuccessResponse({

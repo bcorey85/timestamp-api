@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 import { Note } from '../../models/Note';
+import { Task } from '../../models/Task';
+import { Project } from '../../models/Project';
 import { SuccessResponse } from '../../responses/SuccessResponse';
 import { noteMessage } from '../../responses/responseStrings';
 import { NotFoundError } from '../../responses/errors/NotFoundError';
@@ -20,6 +22,28 @@ const updateNote = async (req: Request, res: Response) => {
 
 	const hours = DateTimeService.getHours(startDate, endDate);
 
+	const task = await Task.find({ task_id: note.task_id });
+
+	if (!task) {
+		throw new NotFoundError();
+	}
+
+	await Task.update(note.task_id, {
+		hours: task.hours - note.hours + hours,
+		updated_at: new Date(Date.now())
+	});
+
+	const project = await Project.find({ project_id: note.project_id });
+
+	if (!project) {
+		throw new NotFoundError();
+	}
+
+	await Project.update(note.project_id, {
+		hours: project.hours - note.hours + hours,
+		updated_at: new Date(Date.now())
+	});
+
 	let tagString;
 	if (tags) {
 		tagString = tags.join(',');
@@ -32,7 +56,8 @@ const updateNote = async (req: Request, res: Response) => {
 		start_time: startDate.toISOString(),
 		end_time: endDate.toISOString(),
 		hours,
-		pinned
+		pinned,
+		updated_at: new Date(Date.now())
 	});
 
 	const response = new SuccessResponse({

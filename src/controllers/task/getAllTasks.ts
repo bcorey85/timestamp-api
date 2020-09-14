@@ -8,7 +8,6 @@ const getAllTasks = async (req: Request, res: Response) => {
 	const { user_id } = req.user!;
 
 	const tasks = await Task.findAll(user_id);
-	console.log(tasks);
 
 	if (!tasks) {
 		throw new NotFoundError();

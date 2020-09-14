@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 import { NotAuthorizedError } from '../responses/errors/NotAuthorizedError';
 import { User, UserModel } from '../models/User';
+import { NotAuthenticatedError } from '../responses/errors/NotAuthenticatedError';
 
 declare global {
 	namespace Express {
@@ -22,13 +23,13 @@ interface UserPayload {
 
 const authUser = async (req: Request, res: Response, next: NextFunction) => {
 	if (!req.headers.authorization) {
-		throw new NotAuthorizedError();
+		throw new NotAuthenticatedError();
 	}
 
 	const token = req.headers.authorization.replace('Bearer ', '');
 
 	if (!token) {
-		throw new NotAuthorizedError();
+		throw new NotAuthenticatedError();
 	}
 
 	try {

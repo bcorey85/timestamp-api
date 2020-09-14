@@ -21,17 +21,14 @@ export const userIdParamRequired = param('userId')
 
 export const projectIdParamRequired = param('projectId')
 	.notEmpty()
-	.isNumeric()
 	.withMessage(requestValidationMessage.error.projectId);
 
 export const taskIdParamRequired = param('taskId')
 	.notEmpty()
-	.isNumeric()
 	.withMessage(requestValidationMessage.error.taskId);
 
 export const noteIdParamRequired = param('noteId')
 	.notEmpty()
-	.isNumeric()
 	.withMessage(requestValidationMessage.error.noteId);
 
 export const updateUserPassword = body(

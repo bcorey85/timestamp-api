@@ -23,7 +23,8 @@ const deleteNote = async (req: Request, res: Response) => {
 
 	await Task.update(note.task_id, {
 		notes: task.notes - 1,
-		hours: task.hours - note.hours
+		hours: task.hours - note.hours,
+		updated_at: new Date(Date.now())
 	});
 
 	const project = await Project.find({ project_id: note.project_id });
@@ -34,7 +35,8 @@ const deleteNote = async (req: Request, res: Response) => {
 
 	await Project.update(note.project_id, {
 		notes: project.notes - 1,
-		hours: project.hours - note.hours
+		hours: project.hours - note.hours,
+		updated_at: new Date(Date.now())
 	});
 
 	await Note.delete(noteId);
