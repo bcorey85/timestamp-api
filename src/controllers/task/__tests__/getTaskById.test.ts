@@ -11,7 +11,7 @@ import {
 } from '../../../test/setup';
 
 describe('Get Task By Id Controller', () => {
-	it('gets single task from  db', async () => {
+	it('gets single task from db', async () => {
 		const { user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
@@ -19,7 +19,6 @@ describe('Get Task By Id Controller', () => {
 
 		const taskBody = await testTaskBody(user_id);
 
-		//@ts-ignore
 		const { task_id } = await createTestTask({ ...taskBody });
 
 		const response = await request(app)
@@ -55,7 +54,6 @@ describe('Get Task By Id Controller', () => {
 
 		const taskBody = await testTaskBody(user_id);
 
-		//@ts-ignore
 		const { task_id } = await createTestTask({ ...taskBody });
 
 		const response = await request(app)

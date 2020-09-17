@@ -12,14 +12,13 @@ import {
 
 describe('Get Note by Id Controller', () => {
 	it('get single note from db', async () => {
-		const { user_id, user_id, token } = await createTestUser(
+		const { user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
 
 		const note = await testNoteBody(user_id);
 
-		//@ts-ignore
 		const { note_id, title } = await createTestNote({ ...note });
 
 		const response = await request(app)
@@ -51,14 +50,10 @@ describe('Get Note by Id Controller', () => {
 	});
 
 	it('throws error if not logged in', async () => {
-		const { user_id, user_id } = await createTestUser(
-			'test@gmail.com',
-			'111111'
-		);
+		const { user_id } = await createTestUser('test@gmail.com', '111111');
 
 		const note = await testNoteBody(user_id);
 
-		//@ts-ignore
 		const { note_id } = await createTestNote({ ...note });
 		const response = await request(app)
 			.get(`/api/notes/${user_id}/${note_id}`)
@@ -71,10 +66,7 @@ describe('Get Note by Id Controller', () => {
 	});
 
 	it('throws error if not authorized', async () => {
-		const { user_id, user_id } = await createTestUser(
-			'test@gmail.com',
-			'111111'
-		);
+		const { user_id } = await createTestUser('test@gmail.com', '111111');
 
 		const { token: token2 } = await createTestUser(
 			'test2@gmail.com',
@@ -83,8 +75,7 @@ describe('Get Note by Id Controller', () => {
 
 		const note = await testNoteBody(user_id);
 
-		//@ts-ignore
-		const { note_id, title } = await createTestNote({ ...note });
+		const { note_id } = await createTestNote({ ...note });
 
 		const response = await request(app)
 			.get(`/api/notes/${user_id}/${note_id}`)

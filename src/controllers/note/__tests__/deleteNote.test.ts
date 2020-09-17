@@ -13,14 +13,13 @@ import {
 
 describe('Delete Note Controller', () => {
 	it('deletes note from db', async () => {
-		const { user_id, user_id, token } = await createTestUser(
+		const { user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
 
 		const noteBody = await testNoteBody(user_id);
 
-		//@ts-ignore
 		const { note_id } = await createTestNote({ ...noteBody });
 
 		const response = await request(app)
@@ -36,13 +35,13 @@ describe('Delete Note Controller', () => {
 	});
 
 	it('throws error if note not found', async () => {
-		const { user_id, user_id, token } = await createTestUser(
+		const { user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
 
 		const noteBody = await testNoteBody(user_id);
-		//@ts-ignore
+
 		const note = await createTestNote({ ...noteBody });
 
 		const fakeId = 500;
@@ -62,13 +61,13 @@ describe('Delete Note Controller', () => {
 	});
 
 	it('throws error if not logged in', async () => {
-		const { user_id, user_id, token } = await createTestUser(
+		const { user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
 
 		const noteBody = await testNoteBody(user_id);
-		//@ts-ignore
+
 		const note = await createTestNote({ ...noteBody });
 
 		const response = await request(app)
@@ -86,10 +85,7 @@ describe('Delete Note Controller', () => {
 	});
 
 	it('throws error if not authorized', async () => {
-		const { user_id, user_id } = await createTestUser(
-			'test@gmail.com',
-			'111111'
-		);
+		const { user_id } = await createTestUser('test@gmail.com', '111111');
 
 		const { token: token2 } = await createTestUser(
 			'test2@gmail.com',
@@ -97,7 +93,7 @@ describe('Delete Note Controller', () => {
 		);
 
 		const noteBody = await testNoteBody(user_id);
-		//@ts-ignore
+
 		const note = await createTestNote({ ...noteBody });
 
 		const response = await request(app)

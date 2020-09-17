@@ -9,7 +9,7 @@ import { createTestUser, createTestProject } from '../../../test/setup';
 
 describe('Delete Project Controller', () => {
 	it('deletes from db', async () => {
-		const { user_id, user_id, token } = await createTestUser(
+		const { user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -35,7 +35,7 @@ describe('Delete Project Controller', () => {
 	});
 
 	it('throws error if not found', async () => {
-		const { user_id, user_id, token } = await createTestUser(
+		const { user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -59,10 +59,7 @@ describe('Delete Project Controller', () => {
 	});
 
 	it('throws error if not logged in', async () => {
-		const { user_id, user_id } = await createTestUser(
-			'test@gmail.com',
-			'111111'
-		);
+		const { user_id } = await createTestUser('test@gmail.com', '111111');
 
 		const project = await createTestProject({
 			title: 'test',
@@ -84,10 +81,7 @@ describe('Delete Project Controller', () => {
 	});
 
 	it('throws error if not authorized', async () => {
-		const { user_id, user_id } = await createTestUser(
-			'test@gmail.com',
-			'111111'
-		);
+		const { user_id } = await createTestUser('test@gmail.com', '111111');
 
 		const { token: token2 } = await createTestUser(
 			'test2@gmail.com',

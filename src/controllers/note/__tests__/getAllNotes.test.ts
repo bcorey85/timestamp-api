@@ -13,7 +13,7 @@ import {
 
 describe('Get All Notes Controller', () => {
 	it('get all notes from db', async () => {
-		const { user_id, user_id, token } = await createTestUser(
+		const { user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -21,9 +21,7 @@ describe('Get All Notes Controller', () => {
 		const note = await testNoteBody(user_id);
 		const note2 = await testNoteBody(user_id);
 
-		//@ts-ignore
 		await createTestNote({ ...note });
-		//@ts-ignore
 		await createTestNote({ ...note2 });
 
 		const response = await request(app)

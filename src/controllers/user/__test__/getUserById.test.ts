@@ -35,8 +35,9 @@ describe('Get User By Id Controller', () => {
 	it('throws error if invalid user id provided', async () => {
 		const { token } = await createTestUser('test@gmail.com', '111111');
 
+		const fakeId = 'test';
 		const response = await request(app)
-			.get(`/api/users/111`)
+			.get(`/api/users/${fakeId}`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(400);
 
@@ -50,8 +51,7 @@ describe('Get User By Id Controller', () => {
 	it('throws error if no user found', async () => {
 		const { token } = await createTestUser('test@gmail.com', '111111');
 
-		const fakeId = 'a2c3c87e-822a-41d4-a48b-0934cdfdf19d';
-
+		const fakeId = 500;
 		const response = await request(app)
 			.get(`/api/users/${fakeId}`)
 			.set('Authorization', `Bearer ${token}`)

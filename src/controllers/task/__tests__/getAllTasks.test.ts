@@ -12,7 +12,7 @@ import {
 
 describe('Get All Tasks Controller', () => {
 	it('gets all tasks db', async () => {
-		const { user_id, user_id, token } = await createTestUser(
+		const { user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -20,9 +20,7 @@ describe('Get All Tasks Controller', () => {
 		const taskBody1 = await testTaskBody(user_id);
 		const taskBody2 = await testTaskBody(user_id);
 
-		//@ts-ignore
 		await createTestTask({ ...taskBody1 });
-		//@ts-ignore
 		await createTestTask({ ...taskBody2 });
 
 		const response = await request(app)
@@ -37,7 +35,7 @@ describe('Get All Tasks Controller', () => {
 	});
 
 	it('throws error if tasks do not exist', async () => {
-		const { user_id, user_id, token } = await createTestUser(
+		const { user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);

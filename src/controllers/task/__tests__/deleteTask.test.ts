@@ -13,7 +13,7 @@ import { Task } from '../../../models/Task';
 
 describe('Delete Task Controller', () => {
 	it('delete task from db', async () => {
-		const { user_id, user_id, token } = await createTestUser(
+		const { user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -36,7 +36,7 @@ describe('Delete Task Controller', () => {
 	});
 
 	it('throws error if task does not exist', async () => {
-		const { user_id, user_id, token } = await createTestUser(
+		const { user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -62,10 +62,7 @@ describe('Delete Task Controller', () => {
 	});
 
 	it('throws error if not logged in', async () => {
-		const { user_id, user_id } = await createTestUser(
-			'test@gmail.com',
-			'111111'
-		);
+		const { user_id } = await createTestUser('test@gmail.com', '111111');
 
 		const taskBody = await testTaskBody(user_id);
 
@@ -86,10 +83,7 @@ describe('Delete Task Controller', () => {
 	});
 
 	it('throws error if not authorized', async () => {
-		const { user_id, user_id } = await createTestUser(
-			'test@gmail.com',
-			'111111'
-		);
+		const { user_id } = await createTestUser('test@gmail.com', '111111');
 		const { token: token2 } = await createTestUser(
 			'test2@gmail.com',
 			'111111'

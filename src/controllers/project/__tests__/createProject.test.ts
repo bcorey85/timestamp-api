@@ -30,7 +30,7 @@ describe('Create Project Controller', () => {
 	});
 
 	it('throws error if no title', async () => {
-		const { user_id, user_id, token } = await createTestUser(
+		const { user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -56,7 +56,7 @@ describe('Create Project Controller', () => {
 	});
 
 	it('throws error if no description', async () => {
-		const { user_id, user_id, token } = await createTestUser(
+		const { user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);

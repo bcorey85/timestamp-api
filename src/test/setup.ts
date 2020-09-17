@@ -116,13 +116,13 @@ export const testNoteBody = async (userId: string) => {
 	return {
 		title: 'test',
 		description: 'test',
-		projectId: project_id,
-		taskId: task_id,
+		projectId: project_id.toString(),
+		taskId: task_id.toString(),
 		userId: userId,
 		pinned: false,
 		hours: 1,
-		startTime: new Date(Date.now() - 1000 * 60 * 60),
-		endTime: new Date(Date.now()),
+		startTime: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
+		endTime: new Date(Date.now()).toISOString(),
 		tags: [ '#tag1', '#tag2' ]
 	};
 };
@@ -138,7 +138,7 @@ export const testTaskBody = async (userId: string) => {
 	return {
 		title: 'test',
 		description: 'test',
-		projectId: project_id,
+		projectId: project_id.toString(),
 		userId: userId,
 		pinned: false,
 		tags: [ '#tag1', '#tag2' ]

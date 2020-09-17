@@ -10,7 +10,7 @@ import { createTestProject, createTestUser } from '../../../test/setup';
 
 describe('Get All Projects Controller', () => {
 	it('gets all project from db', async () => {
-		const { user_id, user_id, token } = await createTestUser(
+		const { user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);

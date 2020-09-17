@@ -8,8 +8,6 @@ interface JwtResponse {
 	iat: number;
 }
 
-const uuidRegex = /^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
-
 describe('Create User', () => {
 	it('should create a user in database and return a user_id', async () => {
 		const newUser = {
@@ -17,10 +15,7 @@ describe('Create User', () => {
 			password: '123456'
 		};
 
-		const response = await User.create(newUser.email, newUser.password);
-		const uuidValid = uuidRegex.test(response.user_id);
-
-		expect(uuidValid).toBe(true);
+		await User.create(newUser.email, newUser.password);
 
 		const users = await User.findAll();
 

@@ -13,14 +13,16 @@ import {
 
 describe('Update Note Controller', () => {
 	it('update note in db', async () => {
-		const { user_id, user_id, token } = await createTestUser(
+		const { user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
 
 		const note = await testNoteBody(user_id);
-		//@ts-ignore
-		const { note_id } = await createTestNote({ ...note });
+
+		const { note_id, task_id, project_id } = await createTestNote({
+			...note
+		});
 
 		const update = {
 			title: 'test2',
@@ -28,6 +30,8 @@ describe('Update Note Controller', () => {
 			tags: [ '#tag1', '#tag2' ],
 			startTime: new Date(Date.now() - 1000 * 60 * 60),
 			endTime: new Date(Date.now()),
+			taskId: task_id,
+			projectId: project_id,
 			hours: 1,
 			pinned: false
 		};
@@ -54,16 +58,25 @@ describe('Update Note Controller', () => {
 	it.todo('throws error if no endTime');
 
 	it('throws error if not logged in', async () => {
-		const { user_id, user_id } = await createTestUser(
-			'test@gmail.com',
-			'111111'
-		);
+		const { user_id } = await createTestUser('test@gmail.com', '111111');
 
 		const note = await testNoteBody(user_id);
-		//@ts-ignore
-		const { note_id } = await createTestNote({ ...note });
 
-		const update = {};
+		const { note_id, task_id, project_id } = await createTestNote({
+			...note
+		});
+
+		const update = {
+			title: 'test2',
+			description: 'test2',
+			tags: [ '#tag1', '#tag2' ],
+			startTime: new Date(Date.now() - 1000 * 60 * 60),
+			endTime: new Date(Date.now()),
+			taskId: task_id,
+			projectId: project_id,
+			hours: 1,
+			pinned: false
+		};
 
 		const response = await request(app)
 			.get(`/api/notes/${user_id}/${note_id}`)
@@ -77,10 +90,7 @@ describe('Update Note Controller', () => {
 	});
 
 	it('throws error if not authorized', async () => {
-		const { user_id, user_id } = await createTestUser(
-			'test@gmail.com',
-			'111111'
-		);
+		const { user_id } = await createTestUser('test@gmail.com', '111111');
 
 		const { token: token2 } = await createTestUser(
 			'test2@gmail.com',
@@ -88,10 +98,22 @@ describe('Update Note Controller', () => {
 		);
 
 		const note = await testNoteBody(user_id);
-		//@ts-ignore
-		const { note_id } = await createTestNote({ ...note });
 
-		const update = {};
+		const { note_id, task_id, project_id } = await createTestNote({
+			...note
+		});
+
+		const update = {
+			title: 'test2',
+			description: 'test2',
+			tags: [ '#tag1', '#tag2' ],
+			startTime: new Date(Date.now() - 1000 * 60 * 60),
+			endTime: new Date(Date.now()),
+			taskId: task_id,
+			projectId: project_id,
+			hours: 1,
+			pinned: false
+		};
 
 		const response = await request(app)
 			.put(`/api/notes/${user_id}/${note_id}`)

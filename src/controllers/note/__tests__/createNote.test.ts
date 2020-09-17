@@ -9,7 +9,7 @@ import { createTestUser, testNoteBody } from '../../../test/setup';
 
 describe('Create Note Controller', () => {
 	it('creates new note in db', async () => {
-		const { user_id, user_id, token } = await createTestUser(
+		const { user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -27,10 +27,7 @@ describe('Create Note Controller', () => {
 	});
 
 	it('throws error if no title', async () => {
-		const { user_id, user_id } = await createTestUser(
-			'test@gmail.com',
-			'111111'
-		);
+		const { user_id } = await createTestUser('test@gmail.com', '111111');
 
 		const note = await testNoteBody(user_id);
 		note.title = '';
@@ -50,10 +47,7 @@ describe('Create Note Controller', () => {
 	});
 
 	it('throws error if no description', async () => {
-		const { user_id, user_id } = await createTestUser(
-			'test@gmail.com',
-			'111111'
-		);
+		const { user_id } = await createTestUser('test@gmail.com', '111111');
 
 		const note = await testNoteBody(user_id);
 		note.description = '';
@@ -73,10 +67,7 @@ describe('Create Note Controller', () => {
 	});
 
 	it('throws error if no taskId', async () => {
-		const { user_id, user_id } = await createTestUser(
-			'test@gmail.com',
-			'111111'
-		);
+		const { user_id } = await createTestUser('test@gmail.com', '111111');
 
 		const note = await testNoteBody(user_id);
 		// @ts-ignore
@@ -97,10 +88,7 @@ describe('Create Note Controller', () => {
 	});
 
 	it('throws error if no projectId', async () => {
-		const { user_id, user_id } = await createTestUser(
-			'test@gmail.com',
-			'111111'
-		);
+		const { user_id } = await createTestUser('test@gmail.com', '111111');
 
 		const note = await testNoteBody(user_id);
 		//@ts-ignore
@@ -121,10 +109,7 @@ describe('Create Note Controller', () => {
 	});
 
 	it('throws error if no startTime', async () => {
-		const { user_id, user_id } = await createTestUser(
-			'test@gmail.com',
-			'111111'
-		);
+		const { user_id } = await createTestUser('test@gmail.com', '111111');
 
 		const note = await testNoteBody(user_id);
 		//@ts-ignore
@@ -145,10 +130,7 @@ describe('Create Note Controller', () => {
 	});
 
 	it('throws error if no endTime', async () => {
-		const { user_id, user_id } = await createTestUser(
-			'test@gmail.com',
-			'111111'
-		);
+		const { user_id } = await createTestUser('test@gmail.com', '111111');
 
 		const note = await testNoteBody(user_id);
 		//@ts-ignore
@@ -169,10 +151,7 @@ describe('Create Note Controller', () => {
 	});
 
 	it('throws error if not logged in', async () => {
-		const { user_id, user_id } = await createTestUser(
-			'test@gmail.com',
-			'111111'
-		);
+		const { user_id } = await createTestUser('test@gmail.com', '111111');
 
 		const note = await testNoteBody(user_id);
 
@@ -191,10 +170,7 @@ describe('Create Note Controller', () => {
 	});
 
 	it('throws error if not authorized', async () => {
-		const { user_id, user_id } = await createTestUser(
-			'test@gmail.com',
-			'111111'
-		);
+		const { user_id } = await createTestUser('test@gmail.com', '111111');
 
 		const { token: token2 } = await createTestUser(
 			'test2@gmail.com',

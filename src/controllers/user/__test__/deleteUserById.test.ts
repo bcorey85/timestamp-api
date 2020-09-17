@@ -57,7 +57,7 @@ describe('Delete User Controller', () => {
 			'111111'
 		);
 
-		const fakeId = 'a2c3c87e-822a-41d4-a48b-0934cdfdf19d';
+		const fakeId = 500;
 
 		const response = await request(app)
 			.delete(`/api/users/${fakeId}`)
