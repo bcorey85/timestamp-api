@@ -43,7 +43,12 @@ router.get(
 
 router.put(
 	'/:userId/:projectId',
-	[ userIdParamRequired, projectIdParamRequired ],
+	[
+		userIdParamRequired,
+		projectIdParamRequired,
+		titleRequired,
+		descriptionRequired
+	],
 	validateRequest,
 	authUser,
 	updateProject

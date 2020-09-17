@@ -49,7 +49,13 @@ router.get(
 
 router.put(
 	'/:userId/:taskId',
-	[ userIdParamRequired, taskIdParamRequired ],
+	[
+		userIdParamRequired,
+		taskIdParamRequired,
+		titleRequired,
+		descriptionRequired,
+		projectRequired
+	],
 	validateRequest,
 	authUser,
 	updateTask

@@ -55,7 +55,16 @@ router.get(
 
 router.put(
 	'/:userId/:noteId',
-	[ userIdParamRequired, noteIdParamRequired ],
+	[
+		userIdParamRequired,
+		noteIdParamRequired,
+		titleRequired,
+		descriptionRequired,
+		startTimeRequired,
+		endTimeRequired,
+		projectRequired,
+		taskRequired
+	],
 	validateRequest,
 	authUser,
 	updateNote
