@@ -12,7 +12,7 @@ import {
 
 describe('Get Note by Id Controller', () => {
 	it('get single note from db', async () => {
-		const { public_user_id, user_id, token } = await createTestUser(
+		const { user_id, user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -23,7 +23,7 @@ describe('Get Note by Id Controller', () => {
 		const { note_id, title } = await createTestNote({ ...note });
 
 		const response = await request(app)
-			.get(`/api/notes/${public_user_id}/${note_id}`)
+			.get(`/api/notes/${user_id}/${note_id}`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(200);
 
@@ -33,14 +33,14 @@ describe('Get Note by Id Controller', () => {
 	});
 
 	it('throws error if not found', async () => {
-		const { public_user_id, token } = await createTestUser(
+		const { user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
 
 		const fakeId = 500;
 		const response = await request(app)
-			.get(`/api/notes/${public_user_id}/${fakeId}`)
+			.get(`/api/notes/${user_id}/${fakeId}`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(404);
 
@@ -51,7 +51,7 @@ describe('Get Note by Id Controller', () => {
 	});
 
 	it('throws error if not logged in', async () => {
-		const { public_user_id, user_id } = await createTestUser(
+		const { user_id, user_id } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -61,7 +61,7 @@ describe('Get Note by Id Controller', () => {
 		//@ts-ignore
 		const { note_id } = await createTestNote({ ...note });
 		const response = await request(app)
-			.get(`/api/notes/${public_user_id}/${note_id}`)
+			.get(`/api/notes/${user_id}/${note_id}`)
 			.expect(401);
 
 		expect(response.body.success).toBe(false);
@@ -71,7 +71,7 @@ describe('Get Note by Id Controller', () => {
 	});
 
 	it('throws error if not authorized', async () => {
-		const { public_user_id, user_id } = await createTestUser(
+		const { user_id, user_id } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -87,7 +87,7 @@ describe('Get Note by Id Controller', () => {
 		const { note_id, title } = await createTestNote({ ...note });
 
 		const response = await request(app)
-			.get(`/api/notes/${public_user_id}/${note_id}`)
+			.get(`/api/notes/${user_id}/${note_id}`)
 			.set('Authorization', token2)
 			.expect(403);
 

@@ -13,7 +13,7 @@ import {
 
 describe('Get Task By Id Controller', () => {
 	it('gets single task from  db', async () => {
-		const { public_user_id, user_id, token } = await createTestUser(
+		const { user_id, user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -31,7 +31,7 @@ describe('Get Task By Id Controller', () => {
 		};
 
 		const response = await request(app)
-			.put(`/api/tasks/${public_user_id}/${task_id}`)
+			.put(`/api/tasks/${user_id}/${task_id}`)
 			.set('Authorization', `Bearer ${token}`)
 			.send(update)
 			.expect(200);
@@ -46,14 +46,14 @@ describe('Get Task By Id Controller', () => {
 	});
 
 	it('throws error if task does not exist', async () => {
-		const { public_user_id, token } = await createTestUser(
+		const { user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
 
 		const fakeId = 500;
 		const response = await request(app)
-			.put(`/api/tasks/${public_user_id}/${fakeId}`)
+			.put(`/api/tasks/${user_id}/${fakeId}`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(404);
 
@@ -68,7 +68,7 @@ describe('Get Task By Id Controller', () => {
 	it.todo('throws error if no projectId');
 
 	it('throws error if not logged in', async () => {
-		const { public_user_id, user_id } = await createTestUser(
+		const { user_id, user_id } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -79,7 +79,7 @@ describe('Get Task By Id Controller', () => {
 		const { task_id } = await createTestTask({ ...taskBody });
 
 		const response = await request(app)
-			.put(`/api/tasks/${public_user_id}/${task_id}`)
+			.put(`/api/tasks/${user_id}/${task_id}`)
 			.expect(401);
 
 		expect(response.body.success).toBe(false);
@@ -89,7 +89,7 @@ describe('Get Task By Id Controller', () => {
 	});
 
 	it('throws error if not authorized', async () => {
-		const { public_user_id, user_id } = await createTestUser(
+		const { user_id, user_id } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -104,7 +104,7 @@ describe('Get Task By Id Controller', () => {
 		const { task_id } = await createTestTask({ ...taskBody });
 
 		const response = await request(app)
-			.put(`/api/tasks/${public_user_id}/${task_id}`)
+			.put(`/api/tasks/${user_id}/${task_id}`)
 			.set('Authorization', `Bearer ${token2}`)
 			.expect(403);
 

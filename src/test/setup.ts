@@ -26,10 +26,10 @@ afterAll(async () => {
 });
 
 export const createTestUser = async (email: string, password: string) => {
-	const { public_user_id, user_id } = await User.create(email, password);
-	const token = await User.generateAuthToken(public_user_id);
+	const { user_id } = await User.create(email, password);
+	const token = await User.generateAuthToken(user_id);
 
-	return { email, password, public_user_id, user_id, token };
+	return { email, password, user_id, token };
 };
 
 export const createTestProject = async ({

@@ -10,7 +10,7 @@ const createTask = async (req: Request, res: Response) => {
 	const { userId } = req.params;
 	const { title, description, projectId, tags, pinned } = req.body;
 
-	const { user_id } = await User.find({ public_user_id: userId });
+	const { user_id } = await User.find({ user_id: userId });
 	await Task.create({
 		title,
 		description,

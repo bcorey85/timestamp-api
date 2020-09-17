@@ -8,7 +8,7 @@ import { userMessage } from '../../responses/responseStrings';
 const deleteUserById = async (req: Request, res: Response) => {
 	const { userId } = req.params;
 
-	const user = await User.find({ public_user_id: userId });
+	const user = await User.find({ user_id: userId });
 
 	if (!user) {
 		throw new NotFoundError();
@@ -19,7 +19,7 @@ const deleteUserById = async (req: Request, res: Response) => {
 		data: {}
 	});
 
-	await User.delete(user.public_user_id);
+	await User.delete(user.user_id);
 
 	res.send(response.body);
 };

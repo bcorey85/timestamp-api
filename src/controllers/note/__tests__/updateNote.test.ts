@@ -13,7 +13,7 @@ import {
 
 describe('Update Note Controller', () => {
 	it('update note in db', async () => {
-		const { public_user_id, user_id, token } = await createTestUser(
+		const { user_id, user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -33,7 +33,7 @@ describe('Update Note Controller', () => {
 		};
 
 		const response = await request(app)
-			.put(`/api/notes/${public_user_id}/${note_id}`)
+			.put(`/api/notes/${user_id}/${note_id}`)
 			.set('Authorization', token)
 			.send(update)
 			.expect(200);
@@ -54,7 +54,7 @@ describe('Update Note Controller', () => {
 	it.todo('throws error if no endTime');
 
 	it('throws error if not logged in', async () => {
-		const { public_user_id, user_id } = await createTestUser(
+		const { user_id, user_id } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -66,7 +66,7 @@ describe('Update Note Controller', () => {
 		const update = {};
 
 		const response = await request(app)
-			.get(`/api/notes/${public_user_id}/${note_id}`)
+			.get(`/api/notes/${user_id}/${note_id}`)
 			.send(update)
 			.expect(401);
 
@@ -77,7 +77,7 @@ describe('Update Note Controller', () => {
 	});
 
 	it('throws error if not authorized', async () => {
-		const { public_user_id, user_id } = await createTestUser(
+		const { user_id, user_id } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -94,7 +94,7 @@ describe('Update Note Controller', () => {
 		const update = {};
 
 		const response = await request(app)
-			.put(`/api/notes/${public_user_id}/${note_id}`)
+			.put(`/api/notes/${user_id}/${note_id}`)
 			.set('Authorization', token2)
 			.send(update)
 			.expect(403);

@@ -11,7 +11,7 @@ import { createTestUser, createTestProject } from '../../../test/setup';
 
 describe('Update Project Controller', () => {
 	it('updates project in db', async () => {
-		const { public_user_id, user_id, token } = await createTestUser(
+		const { user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -31,7 +31,7 @@ describe('Update Project Controller', () => {
 
 		const { project_id } = await Project.find({ title: project.title });
 		const response = await request(app)
-			.put(`/api/projects/${public_user_id}/${project_id}`)
+			.put(`/api/projects/${user_id}/${project_id}`)
 			.set('Authorization', token)
 			.send(update)
 			.expect(200);
@@ -53,7 +53,7 @@ describe('Update Project Controller', () => {
 	it.todo('throws error if no description');
 
 	it('throws error if not found', async () => {
-		const { public_user_id, user_id, token } = await createTestUser(
+		const { user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -73,7 +73,7 @@ describe('Update Project Controller', () => {
 
 		const fakeProjectId = 500;
 		const response = await request(app)
-			.put(`/api/projects/${public_user_id}/${fakeProjectId}`)
+			.put(`/api/projects/${user_id}/${fakeProjectId}`)
 			.set('Authorization', token)
 			.send(update)
 			.expect(404);
@@ -91,10 +91,7 @@ describe('Update Project Controller', () => {
 	});
 
 	it('throws error if not logged in', async () => {
-		const { public_user_id, user_id } = await createTestUser(
-			'test@gmail.com',
-			'111111'
-		);
+		const { user_id } = await createTestUser('test@gmail.com', '111111');
 
 		const project = await createTestProject({
 			title: 'test',
@@ -111,7 +108,7 @@ describe('Update Project Controller', () => {
 
 		const { project_id } = await Project.find({ title: project.title });
 		const response = await request(app)
-			.put(`/api/projects/${public_user_id}/${project_id}`)
+			.put(`/api/projects/${user_id}/${project_id}`)
 			.send(update)
 			.expect(401);
 
@@ -128,10 +125,7 @@ describe('Update Project Controller', () => {
 	});
 
 	it('throws error if not authorized', async () => {
-		const { public_user_id, user_id } = await createTestUser(
-			'test@gmail.com',
-			'111111'
-		);
+		const { user_id } = await createTestUser('test@gmail.com', '111111');
 
 		const { token: token2 } = await createTestUser(
 			'test2@gmail.com',
@@ -153,7 +147,7 @@ describe('Update Project Controller', () => {
 
 		const { project_id } = await Project.find({ title: project.title });
 		const response = await request(app)
-			.put(`/api/projects/${public_user_id}/${project_id}`)
+			.put(`/api/projects/${user_id}/${project_id}`)
 			.set('Authorization', token2)
 			.send(update)
 			.expect(403);

@@ -10,7 +10,7 @@ import { createTestProject, createTestUser } from '../../../test/setup';
 
 describe('Get All Projects Controller', () => {
 	it('gets all project from db', async () => {
-		const { public_user_id, user_id, token } = await createTestUser(
+		const { user_id, user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -30,7 +30,7 @@ describe('Get All Projects Controller', () => {
 		});
 
 		const response = await request(app)
-			.get(`/api/projects/${public_user_id}/`)
+			.get(`/api/projects/${user_id}/`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(200);
 
@@ -44,13 +44,13 @@ describe('Get All Projects Controller', () => {
 	});
 
 	it('throws error if not found', async () => {
-		const { public_user_id, token } = await createTestUser(
+		const { user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
 
 		const response = await request(app)
-			.get(`/api/projects/${public_user_id}/`)
+			.get(`/api/projects/${user_id}/`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(404);
 
@@ -61,13 +61,10 @@ describe('Get All Projects Controller', () => {
 	});
 
 	it('throws error if not logged in', async () => {
-		const { public_user_id } = await createTestUser(
-			'test@gmail.com',
-			'111111'
-		);
+		const { user_id } = await createTestUser('test@gmail.com', '111111');
 
 		const response = await request(app)
-			.get(`/api/projects/${public_user_id}/`)
+			.get(`/api/projects/${user_id}/`)
 			.expect(401);
 
 		expect(response.body.success).toBe(false);
@@ -77,7 +74,7 @@ describe('Get All Projects Controller', () => {
 	});
 
 	it('throws error if not authorized', async () => {
-		const { public_user_id, token } = await createTestUser(
+		const { user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -93,7 +90,7 @@ describe('Get All Projects Controller', () => {
 		};
 
 		const createdResponse = await request(app)
-			.post(`/api/projects/${public_user_id}/`)
+			.post(`/api/projects/${user_id}/`)
 			.set('Authorization', `Bearer ${token}`)
 			.send(project)
 			.expect(201);
@@ -101,7 +98,7 @@ describe('Get All Projects Controller', () => {
 		const { project_id } = await Project.find({ title: project.title });
 
 		const getResponse = await request(app)
-			.get(`/api/projects/${public_user_id}/${project_id}`)
+			.get(`/api/projects/${user_id}/${project_id}`)
 			.set('Authorization', `Bearer ${token2}`)
 			.send(project)
 			.expect(403);

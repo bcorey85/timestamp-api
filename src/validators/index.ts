@@ -16,7 +16,6 @@ export const passwordRequired = body('password')
 
 export const userIdParamRequired = param('userId')
 	.notEmpty()
-	.isUUID()
 	.withMessage(requestValidationMessage.error.userId);
 
 export const projectIdParamRequired = param('projectId')

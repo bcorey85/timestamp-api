@@ -9,12 +9,12 @@ import { createTestUser } from '../../../test/setup';
 
 describe('Reset Password Controller', () => {
 	it('resets password in database and sends new auth token', async () => {
-		const { email, public_user_id } = await createTestUser(
+		const { email, user_id } = await createTestUser(
 			'test@test.com',
 			'123456'
 		);
 
-		const token = await User.generateResetPasswordToken(public_user_id);
+		const token = await User.generateResetPasswordToken(user_id);
 
 		const response = await request(app)
 			.put(`/api/auth/reset-password/${token}`)
@@ -33,12 +33,12 @@ describe('Reset Password Controller', () => {
 	});
 
 	it('throws error if passwords dont match', async () => {
-		const { email, public_user_id } = await createTestUser(
+		const { email, user_id } = await createTestUser(
 			'test@test.com',
 			'123456'
 		);
 
-		const token = await User.generateResetPasswordToken(public_user_id);
+		const token = await User.generateResetPasswordToken(user_id);
 		const response = await request(app)
 			.put(`/api/auth/reset-password/${token}`)
 			.send({ password: '111111', passwordConfirm: '111112' })
@@ -78,13 +78,13 @@ describe('Reset Password Controller', () => {
 	});
 
 	it('throws error if reset token is expired', async () => {
-		const { email, public_user_id } = await createTestUser(
+		const { email, user_id } = await createTestUser(
 			'test@test.com',
 			'123456'
 		);
 
-		const token = await User.generateResetPasswordToken(public_user_id);
-		await User.update(public_user_id, {
+		const token = await User.generateResetPasswordToken(user_id);
+		await User.update(user_id, {
 			password_reset_expires: new Date(Date.now() - 1000 * 60 * 60 * 24)
 		});
 

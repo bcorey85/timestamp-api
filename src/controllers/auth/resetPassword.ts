@@ -26,18 +26,18 @@ const resetPassword = async (req: Request, res: Response) => {
 		throw new BadRequestError(authMessage.error.badResetRequest);
 	}
 
-	await User.updatePassword(user.public_user_id, password);
-	await User.update(user.public_user_id, {
+	await User.updatePassword(user.user_id, password);
+	await User.update(user.user_id, {
 		password_reset_expires: null,
 		password_reset_link: null
 	});
 
-	const token = await User.generateAuthToken(user.public_user_id);
+	const token = await User.generateAuthToken(user.user_id);
 
 	const response = new SuccessResponse({
 		message: authMessage.success.passwordResetComplete,
 		data: {
-			id: user.public_user_id,
+			id: user.user_id,
 			token
 		}
 	});

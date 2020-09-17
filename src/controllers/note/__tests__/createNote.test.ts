@@ -9,7 +9,7 @@ import { createTestUser, testNoteBody } from '../../../test/setup';
 
 describe('Create Note Controller', () => {
 	it('creates new note in db', async () => {
-		const { public_user_id, user_id, token } = await createTestUser(
+		const { user_id, user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -17,7 +17,7 @@ describe('Create Note Controller', () => {
 		const note = await testNoteBody(user_id);
 
 		const response = await request(app)
-			.post(`/api/notes/${public_user_id}`)
+			.post(`/api/notes/${user_id}`)
 			.set('Authorization', `Bearer ${token}`)
 			.send(note)
 			.expect(201);
@@ -27,7 +27,7 @@ describe('Create Note Controller', () => {
 	});
 
 	it('throws error if no title', async () => {
-		const { public_user_id, user_id } = await createTestUser(
+		const { user_id, user_id } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -36,7 +36,7 @@ describe('Create Note Controller', () => {
 		note.title = '';
 
 		const response = await request(app)
-			.post(`/api/notes/${public_user_id}`)
+			.post(`/api/notes/${user_id}`)
 			.send(note)
 			.expect(400);
 
@@ -50,7 +50,7 @@ describe('Create Note Controller', () => {
 	});
 
 	it('throws error if no description', async () => {
-		const { public_user_id, user_id } = await createTestUser(
+		const { user_id, user_id } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -59,7 +59,7 @@ describe('Create Note Controller', () => {
 		note.description = '';
 
 		const response = await request(app)
-			.post(`/api/notes/${public_user_id}`)
+			.post(`/api/notes/${user_id}`)
 			.send(note)
 			.expect(400);
 
@@ -73,7 +73,7 @@ describe('Create Note Controller', () => {
 	});
 
 	it('throws error if no taskId', async () => {
-		const { public_user_id, user_id } = await createTestUser(
+		const { user_id, user_id } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -83,7 +83,7 @@ describe('Create Note Controller', () => {
 		note.taskId = null;
 
 		const response = await request(app)
-			.post(`/api/notes/${public_user_id}`)
+			.post(`/api/notes/${user_id}`)
 			.send(note)
 			.expect(400);
 
@@ -97,7 +97,7 @@ describe('Create Note Controller', () => {
 	});
 
 	it('throws error if no projectId', async () => {
-		const { public_user_id, user_id } = await createTestUser(
+		const { user_id, user_id } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -107,7 +107,7 @@ describe('Create Note Controller', () => {
 		note.projectId = null;
 
 		const response = await request(app)
-			.post(`/api/notes/${public_user_id}`)
+			.post(`/api/notes/${user_id}`)
 			.send(note)
 			.expect(400);
 
@@ -121,7 +121,7 @@ describe('Create Note Controller', () => {
 	});
 
 	it('throws error if no startTime', async () => {
-		const { public_user_id, user_id } = await createTestUser(
+		const { user_id, user_id } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -131,7 +131,7 @@ describe('Create Note Controller', () => {
 		note.startTime = '';
 
 		const response = await request(app)
-			.post(`/api/notes/${public_user_id}`)
+			.post(`/api/notes/${user_id}`)
 			.send(note)
 			.expect(400);
 
@@ -145,7 +145,7 @@ describe('Create Note Controller', () => {
 	});
 
 	it('throws error if no endTime', async () => {
-		const { public_user_id, user_id } = await createTestUser(
+		const { user_id, user_id } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -155,7 +155,7 @@ describe('Create Note Controller', () => {
 		note.endTime = '';
 
 		const response = await request(app)
-			.post(`/api/notes/${public_user_id}`)
+			.post(`/api/notes/${user_id}`)
 			.send(note)
 			.expect(400);
 
@@ -169,7 +169,7 @@ describe('Create Note Controller', () => {
 	});
 
 	it('throws error if not logged in', async () => {
-		const { public_user_id, user_id } = await createTestUser(
+		const { user_id, user_id } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -177,7 +177,7 @@ describe('Create Note Controller', () => {
 		const note = await testNoteBody(user_id);
 
 		const response = await request(app)
-			.post(`/api/notes/${public_user_id}`)
+			.post(`/api/notes/${user_id}`)
 			.send(note)
 			.expect(401);
 
@@ -191,7 +191,7 @@ describe('Create Note Controller', () => {
 	});
 
 	it('throws error if not authorized', async () => {
-		const { public_user_id, user_id } = await createTestUser(
+		const { user_id, user_id } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -204,7 +204,7 @@ describe('Create Note Controller', () => {
 		const note = await testNoteBody(user_id);
 
 		const response = await request(app)
-			.post(`/api/notes/${public_user_id}`)
+			.post(`/api/notes/${user_id}`)
 			.set('Authorization', token2)
 			.send(note)
 			.expect(403);

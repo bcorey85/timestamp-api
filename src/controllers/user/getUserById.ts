@@ -40,7 +40,7 @@ const filterRecentItems = (itemArray: itemArray, amount: number = 10) => {
 
 const getUserById = async (req: Request, res: Response) => {
 	const { userId } = req.params;
-	const user = await User.find({ public_user_id: userId });
+	const user = await User.find({ user_id: userId });
 
 	if (!user) {
 		throw new NotFoundError();
@@ -53,7 +53,7 @@ const getUserById = async (req: Request, res: Response) => {
 		email: user.email,
 		last_login: user.last_login,
 		created_at: user.created_at,
-		public_user_id: user.public_user_id,
+		user_id: user.user_id,
 		projects,
 		tasks,
 		notes,

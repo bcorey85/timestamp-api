@@ -7,7 +7,7 @@ exports.up = function(knex) {
 		tbl.timestamp('created_at').defaultTo(knex.fn.now());
 		tbl.timestamp('updated_at').defaultTo(knex.fn.now());
 		tbl.timestamp('last_login').defaultTo(knex.fn.now());
-		tbl.uuid('public_user_id').defaultTo(knex.raw('uuid_generate_v4()'));
+		// tbl.uuid('user_id').defaultTo(knex.raw('uuid_generate_v4()'));
 		tbl.string('password_reset_link', 100);
 		tbl.timestamp('password_reset_expires');
 		tbl.unique([ 'email' ]);

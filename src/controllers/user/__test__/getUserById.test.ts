@@ -9,20 +9,20 @@ import {
 
 describe('Get User By Id Controller', () => {
 	it('returns user object if request successful', async () => {
-		const { public_user_id, token } = await createTestUser(
+		const { user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'123456'
 		);
 
 		const response = await request(app)
-			.get(`/api/users/${public_user_id}`)
+			.get(`/api/users/${user_id}`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(200);
 
 		expect(response.body.success).toBe(true);
 		expect(response.body.message).toEqual(userMessage.success.getUser);
 		expect(response.body.data).toHaveProperty('user');
-		expect(response.body.data.user.public_user_id).toEqual(public_user_id);
+		expect(response.body.data.user.user_id).toEqual(user_id);
 		expect(response.body.data.user).not.toHaveProperty('password');
 		expect(response.body.data.user).not.toHaveProperty(
 			'password_reset_link'

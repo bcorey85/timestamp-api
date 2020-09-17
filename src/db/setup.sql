@@ -6,7 +6,7 @@ CREATE TABLE users (
     password VARCHAR(60) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     last_login TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    public_user_id  UUID DEFAULT uuid_generate_v4()
+    user_id  UUID DEFAULT uuid_generate_v4()
 )
 
 CREATE TABLE projects {

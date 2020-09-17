@@ -13,7 +13,7 @@ import {
 
 describe('Delete Note Controller', () => {
 	it('deletes note from db', async () => {
-		const { public_user_id, user_id, token } = await createTestUser(
+		const { user_id, user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -24,7 +24,7 @@ describe('Delete Note Controller', () => {
 		const { note_id } = await createTestNote({ ...noteBody });
 
 		const response = await request(app)
-			.delete(`/api/notes/${public_user_id}/${note_id}`)
+			.delete(`/api/notes/${user_id}/${note_id}`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(200);
 
@@ -36,7 +36,7 @@ describe('Delete Note Controller', () => {
 	});
 
 	it('throws error if note not found', async () => {
-		const { public_user_id, user_id, token } = await createTestUser(
+		const { user_id, user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -47,7 +47,7 @@ describe('Delete Note Controller', () => {
 
 		const fakeId = 500;
 		const response = await request(app)
-			.delete(`/api/notes/${public_user_id}/${fakeId}`)
+			.delete(`/api/notes/${user_id}/${fakeId}`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(404);
 
@@ -62,7 +62,7 @@ describe('Delete Note Controller', () => {
 	});
 
 	it('throws error if not logged in', async () => {
-		const { public_user_id, user_id, token } = await createTestUser(
+		const { user_id, user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -72,7 +72,7 @@ describe('Delete Note Controller', () => {
 		const note = await createTestNote({ ...noteBody });
 
 		const response = await request(app)
-			.delete(`/api/notes/${public_user_id}/${note.note_id}`)
+			.delete(`/api/notes/${user_id}/${note.note_id}`)
 			.expect(401);
 
 		expect(response.body.success).toBe(false);
@@ -86,7 +86,7 @@ describe('Delete Note Controller', () => {
 	});
 
 	it('throws error if not authorized', async () => {
-		const { public_user_id, user_id } = await createTestUser(
+		const { user_id, user_id } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -101,7 +101,7 @@ describe('Delete Note Controller', () => {
 		const note = await createTestNote({ ...noteBody });
 
 		const response = await request(app)
-			.delete(`/api/notes/${public_user_id}/${note.note_id}`)
+			.delete(`/api/notes/${user_id}/${note.note_id}`)
 			.set('Authorization', token2)
 			.expect(403);
 

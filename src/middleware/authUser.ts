@@ -9,7 +9,6 @@ declare global {
 		interface Request {
 			user: {
 				user_id: string;
-				public_user_id: string;
 			};
 		}
 	}
@@ -39,20 +38,19 @@ const authUser = async (req: Request, res: Response, next: NextFunction) => {
 		) as UserPayload;
 
 		const user = (await User.find({
-			public_user_id: payload.user
+			user_id: payload.user
 		})) as UserModel;
 
 		if (!user) {
 			throw new NotAuthorizedError();
 		}
 
-		if (user.public_user_id !== req.params.userId) {
+		if (user.user_id.toString() !== req.params.userId) {
 			throw new NotAuthorizedError();
 		}
 
 		req.user = {
-			user_id: user.user_id,
-			public_user_id: payload.user
+			user_id: user.user_id
 		};
 
 		next();

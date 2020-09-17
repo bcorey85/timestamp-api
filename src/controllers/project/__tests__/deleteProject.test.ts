@@ -9,7 +9,7 @@ import { createTestUser, createTestProject } from '../../../test/setup';
 
 describe('Delete Project Controller', () => {
 	it('deletes from db', async () => {
-		const { user_id, public_user_id, token } = await createTestUser(
+		const { user_id, user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -24,7 +24,7 @@ describe('Delete Project Controller', () => {
 		const { project_id } = await Project.find({ title: project.title });
 
 		const deleteResponse = await request(app)
-			.delete(`/api/projects/${public_user_id}/${project_id}`)
+			.delete(`/api/projects/${user_id}/${project_id}`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(200);
 
@@ -35,7 +35,7 @@ describe('Delete Project Controller', () => {
 	});
 
 	it('throws error if not found', async () => {
-		const { user_id, public_user_id, token } = await createTestUser(
+		const { user_id, user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -48,7 +48,7 @@ describe('Delete Project Controller', () => {
 		});
 
 		const deleteResponse = await request(app)
-			.delete(`/api/projects/${public_user_id}/500`)
+			.delete(`/api/projects/${user_id}/500`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(404);
 
@@ -59,7 +59,7 @@ describe('Delete Project Controller', () => {
 	});
 
 	it('throws error if not logged in', async () => {
-		const { user_id, public_user_id } = await createTestUser(
+		const { user_id, user_id } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -74,7 +74,7 @@ describe('Delete Project Controller', () => {
 		const { project_id } = await Project.find({ title: project.title });
 
 		const deleteResponse = await request(app)
-			.delete(`/api/projects/${public_user_id}/${project_id}`)
+			.delete(`/api/projects/${user_id}/${project_id}`)
 			.expect(401);
 
 		expect(deleteResponse.body.success).toBe(false);
@@ -84,7 +84,7 @@ describe('Delete Project Controller', () => {
 	});
 
 	it('throws error if not authorized', async () => {
-		const { user_id, public_user_id } = await createTestUser(
+		const { user_id, user_id } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -104,7 +104,7 @@ describe('Delete Project Controller', () => {
 		const { project_id } = await Project.find({ title: project.title });
 
 		const deleteResponse = await request(app)
-			.delete(`/api/projects/${public_user_id}/${project_id}`)
+			.delete(`/api/projects/${user_id}/${project_id}`)
 			.set('Authorization', `Bearer ${token2}`)
 			.expect(403);
 

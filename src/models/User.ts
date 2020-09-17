@@ -13,7 +13,6 @@ export interface UserModel {
 	user_id: string;
 	email: string;
 	password: string;
-	public_user_id: string;
 	created_at: Date;
 	last_login: Date;
 	password_reset_link?: string;
@@ -59,14 +58,14 @@ class User {
 
 		const user = await db('users')
 			.update(update)
-			.where({ public_user_id: userId })
+			.where({ user_id: userId })
 			.returning('*');
 
 		return user;
 	};
 
 	static delete = async (userId: string) => {
-		await db('users').del().where({ public_user_id: userId });
+		await db('users').del().where({ user_id: userId });
 	};
 
 	static generateAuthToken = async (userid: string): Promise<string> => {
@@ -91,7 +90,7 @@ class User {
 				password: hashed,
 				updated_at: new Date(Date.now())
 			})
-			.where({ public_user_id: userid });
+			.where({ user_id: userid });
 	};
 
 	static generateResetPasswordToken = async (
@@ -109,7 +108,7 @@ class User {
 				password_reset_link: resetHash,
 				password_reset_expires: resetExpires
 			})
-			.where({ public_user_id: userid });
+			.where({ user_id: userid });
 
 		return resetToken;
 	};

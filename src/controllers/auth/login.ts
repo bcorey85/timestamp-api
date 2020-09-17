@@ -20,16 +20,16 @@ const login = async (req: Request, res: Response) => {
 		throw new AuthFailureError(authMessage.error.invalidCredentials);
 	}
 
-	const token = await User.generateAuthToken(user.public_user_id);
+	const token = await User.generateAuthToken(user.user_id);
 
-	await User.update(user.public_user_id, {
+	await User.update(user.user_id, {
 		last_login: new Date(Date.now()).toISOString()
 	});
 
 	const response = new SuccessResponse({
 		message: authMessage.success.loginValid,
 		data: {
-			id: user.public_user_id,
+			id: user.user_id,
 			token
 		}
 	});

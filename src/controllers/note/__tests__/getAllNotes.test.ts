@@ -13,7 +13,7 @@ import {
 
 describe('Get All Notes Controller', () => {
 	it('get all notes from db', async () => {
-		const { public_user_id, user_id, token } = await createTestUser(
+		const { user_id, user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -27,7 +27,7 @@ describe('Get All Notes Controller', () => {
 		await createTestNote({ ...note2 });
 
 		const response = await request(app)
-			.get(`/api/notes/${public_user_id}`)
+			.get(`/api/notes/${user_id}`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(200);
 
@@ -36,13 +36,13 @@ describe('Get All Notes Controller', () => {
 	});
 
 	it('throws error if not found', async () => {
-		const { public_user_id, token } = await createTestUser(
+		const { user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
 
 		const response = await request(app)
-			.get(`/api/notes/${public_user_id}`)
+			.get(`/api/notes/${user_id}`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(404);
 
@@ -53,13 +53,10 @@ describe('Get All Notes Controller', () => {
 	});
 
 	it('throws error if not logged in', async () => {
-		const { public_user_id } = await createTestUser(
-			'test@gmail.com',
-			'111111'
-		);
+		const { user_id } = await createTestUser('test@gmail.com', '111111');
 
 		const response = await request(app)
-			.get(`/api/notes/${public_user_id}`)
+			.get(`/api/notes/${user_id}`)
 			.expect(401);
 
 		expect(response.body.success).toBe(false);
@@ -69,10 +66,7 @@ describe('Get All Notes Controller', () => {
 	});
 
 	it('throws error if not authorized', async () => {
-		const { public_user_id } = await createTestUser(
-			'test@gmail.com',
-			'111111'
-		);
+		const { user_id } = await createTestUser('test@gmail.com', '111111');
 
 		const { token: token2 } = await createTestUser(
 			'test2@gmail.com',
@@ -80,7 +74,7 @@ describe('Get All Notes Controller', () => {
 		);
 
 		const response = await request(app)
-			.get(`/api/notes/${public_user_id}`)
+			.get(`/api/notes/${user_id}`)
 			.set('Authorization', token2)
 			.expect(403);
 

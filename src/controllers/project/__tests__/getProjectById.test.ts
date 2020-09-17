@@ -9,7 +9,7 @@ import { createTestUser, createTestProject } from '../../../test/setup';
 
 describe('Get Project Controller', () => {
 	it('gets single project from db', async () => {
-		const { public_user_id, user_id, token } = await createTestUser(
+		const { user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -24,7 +24,7 @@ describe('Get Project Controller', () => {
 		const { project_id } = await Project.find({ title: project.title });
 
 		const response = await request(app)
-			.get(`/api/projects/${public_user_id}/${project_id}`)
+			.get(`/api/projects/${user_id}/${project_id}`)
 			.set('Authorization', `Bearer ${token}`)
 			.send(project)
 			.expect(200);
@@ -36,7 +36,7 @@ describe('Get Project Controller', () => {
 	});
 
 	it('throws error if not found', async () => {
-		const { public_user_id, user_id, token } = await createTestUser(
+		const { user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -49,7 +49,7 @@ describe('Get Project Controller', () => {
 		});
 
 		const response = await request(app)
-			.get(`/api/projects/${public_user_id}/500`)
+			.get(`/api/projects/${user_id}/500`)
 			.set('Authorization', `Bearer ${token}`)
 			.send(project)
 			.expect(404);
@@ -61,10 +61,7 @@ describe('Get Project Controller', () => {
 	});
 
 	it('throws error if not logged in', async () => {
-		const { public_user_id, user_id } = await createTestUser(
-			'test@gmail.com',
-			'111111'
-		);
+		const { user_id } = await createTestUser('test@gmail.com', '111111');
 
 		const project = await createTestProject({
 			title: 'test',
@@ -76,7 +73,7 @@ describe('Get Project Controller', () => {
 		const { project_id } = await Project.find({ title: project.title });
 
 		const response = await request(app)
-			.get(`/api/projects/${public_user_id}/${project_id}`)
+			.get(`/api/projects/${user_id}/${project_id}`)
 			.send(project)
 			.expect(401);
 
@@ -87,10 +84,7 @@ describe('Get Project Controller', () => {
 	});
 
 	it('throws error if not authorized', async () => {
-		const { public_user_id, user_id } = await createTestUser(
-			'test@gmail.com',
-			'111111'
-		);
+		const { user_id } = await createTestUser('test@gmail.com', '111111');
 
 		const { token: token2 } = await createTestUser(
 			'test2@gmail.com',
@@ -107,7 +101,7 @@ describe('Get Project Controller', () => {
 		const { project_id } = await Project.find({ title: project.title });
 
 		const response = await request(app)
-			.get(`/api/projects/${public_user_id}/${project_id}`)
+			.get(`/api/projects/${user_id}/${project_id}`)
 			.set('Authorization', `Bearer ${token2}`)
 			.send(project)
 			.expect(403);

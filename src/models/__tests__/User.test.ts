@@ -11,14 +11,14 @@ interface JwtResponse {
 const uuidRegex = /^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
 
 describe('Create User', () => {
-	it('should create a user in database and return a public_user_id', async () => {
+	it('should create a user in database and return a user_id', async () => {
 		const newUser = {
 			email: 'test@gmail.com',
 			password: '123456'
 		};
 
 		const response = await User.create(newUser.email, newUser.password);
-		const uuidValid = uuidRegex.test(response.public_user_id);
+		const uuidValid = uuidRegex.test(response.user_id);
 
 		expect(uuidValid).toBe(true);
 
@@ -37,10 +37,10 @@ describe('Find User', () => {
 		const userTwo = await createTestUser('test2@gmail.com', '123456');
 
 		const response2 = await User.find({
-			public_user_id: userTwo.public_user_id
+			user_id: userTwo.user_id
 		});
 
-		expect(response2.public_user_id).toEqual(userTwo.public_user_id);
+		expect(response2.user_id).toEqual(userTwo.user_id);
 	});
 });
 
@@ -87,12 +87,12 @@ describe('Update user', () => {
 		const user = await User.create('test@gmail.com', '123456');
 
 		const newEmail = 'test2@gmail.com';
-		await User.update(user.public_user_id, {
+		await User.update(user.user_id, {
 			email: newEmail
 		});
 
 		const updatedUser = await User.find({
-			public_user_id: user.public_user_id
+			user_id: user.user_id
 		});
 
 		expect(updatedUser.email).toBe(newEmail);
@@ -103,13 +103,13 @@ describe('Update user', () => {
 
 		const newPass = '111111';
 		const newEmail = 'test2@gmail.com';
-		await User.update(user.public_user_id, {
+		await User.update(user.user_id, {
 			password: newPass,
 			email: newEmail
 		});
 
 		const updatedUser = await User.find({
-			public_user_id: user.public_user_id
+			user_id: user.user_id
 		});
 
 		const passMatch = await User.comparePassword(updatedUser, newPass);
@@ -122,7 +122,7 @@ describe('Delete user', () => {
 	it('should delete user from db', async () => {
 		const user = await User.create('test@gmail.com', '123456');
 
-		await User.delete(user.public_user_id);
+		await User.delete(user.user_id);
 
 		const users = await User.findAll();
 

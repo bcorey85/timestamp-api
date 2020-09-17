@@ -12,7 +12,7 @@ import {
 
 describe('Get All Tasks Controller', () => {
 	it('gets all tasks db', async () => {
-		const { public_user_id, user_id, token } = await createTestUser(
+		const { user_id, user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -26,7 +26,7 @@ describe('Get All Tasks Controller', () => {
 		await createTestTask({ ...taskBody2 });
 
 		const response = await request(app)
-			.get(`/api/tasks/${public_user_id}`)
+			.get(`/api/tasks/${user_id}`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(200);
 
@@ -37,13 +37,13 @@ describe('Get All Tasks Controller', () => {
 	});
 
 	it('throws error if tasks do not exist', async () => {
-		const { public_user_id, user_id, token } = await createTestUser(
+		const { user_id, user_id, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
 
 		const response = await request(app)
-			.get(`/api/tasks/${public_user_id}`)
+			.get(`/api/tasks/${user_id}`)
 			.set('Authorization', token)
 			.expect(404);
 
@@ -54,13 +54,10 @@ describe('Get All Tasks Controller', () => {
 	});
 
 	it('throws error if not logged in', async () => {
-		const { public_user_id } = await createTestUser(
-			'test@gmail.com',
-			'111111'
-		);
+		const { user_id } = await createTestUser('test@gmail.com', '111111');
 
 		const response = await request(app)
-			.get(`/api/tasks/${public_user_id}`)
+			.get(`/api/tasks/${user_id}`)
 			.expect(401);
 
 		expect(response.body.success).toBe(false);
@@ -70,17 +67,14 @@ describe('Get All Tasks Controller', () => {
 	});
 
 	it('throws error if not authorized', async () => {
-		const { public_user_id } = await createTestUser(
-			'test@gmail.com',
-			'111111'
-		);
+		const { user_id } = await createTestUser('test@gmail.com', '111111');
 		const { token: token2 } = await createTestUser(
 			'test2@gmail.com',
 			'111111'
 		);
 
 		const response = await request(app)
-			.get(`/api/tasks/${public_user_id}`)
+			.get(`/api/tasks/${user_id}`)
 			.set('Authorization', `Bearer ${token2}`)
 			.expect(403);
 
