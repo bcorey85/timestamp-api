@@ -10,7 +10,6 @@ import {
 import {
 	userIdParamRequired,
 	titleRequired,
-	descriptionRequired,
 	projectRequired,
 	taskIdParamRequired
 } from '../validators';
@@ -20,12 +19,7 @@ const router = express.Router();
 
 router.post(
 	'/:userId',
-	[
-		userIdParamRequired,
-		titleRequired,
-		descriptionRequired,
-		projectRequired
-	],
+	[ userIdParamRequired, titleRequired, projectRequired ],
 	validateRequest,
 	authUser,
 	createTask
@@ -53,7 +47,6 @@ router.put(
 		userIdParamRequired,
 		taskIdParamRequired,
 		titleRequired,
-		descriptionRequired,
 		projectRequired
 	],
 	validateRequest,

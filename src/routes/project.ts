@@ -10,7 +10,6 @@ import {
 import {
 	userIdParamRequired,
 	titleRequired,
-	descriptionRequired,
 	projectIdParamRequired
 } from '../validators';
 import { authUser } from '../middleware/authUser';
@@ -19,7 +18,7 @@ const router = express.Router();
 
 router.post(
 	'/:userId',
-	[ userIdParamRequired, titleRequired, descriptionRequired ],
+	[ userIdParamRequired, titleRequired ],
 	validateRequest,
 	authUser,
 	createProject
@@ -43,12 +42,7 @@ router.get(
 
 router.put(
 	'/:userId/:projectId',
-	[
-		userIdParamRequired,
-		projectIdParamRequired,
-		titleRequired,
-		descriptionRequired
-	],
+	[ userIdParamRequired, projectIdParamRequired, titleRequired ],
 	validateRequest,
 	authUser,
 	updateProject

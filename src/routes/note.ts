@@ -10,7 +10,6 @@ import {
 import {
 	userIdParamRequired,
 	titleRequired,
-	descriptionRequired,
 	startTimeRequired,
 	endTimeRequired,
 	projectRequired,
@@ -26,7 +25,6 @@ router.post(
 	[
 		userIdParamRequired,
 		titleRequired,
-		descriptionRequired,
 		startTimeRequired,
 		endTimeRequired,
 		projectRequired,
@@ -59,7 +57,6 @@ router.put(
 		userIdParamRequired,
 		noteIdParamRequired,
 		titleRequired,
-		descriptionRequired,
 		startTimeRequired,
 		endTimeRequired,
 		projectRequired,
