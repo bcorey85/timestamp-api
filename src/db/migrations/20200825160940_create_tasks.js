@@ -5,7 +5,7 @@ exports.up = function(knex) {
 		tbl.integer('project_id').unsigned().notNullable();
 		tbl.string('title', 1000).notNullable();
 		tbl.string('tags', 1000);
-		tbl.text('description').notNullable();
+		tbl.text('description');
 		tbl.boolean('pinned').defaultTo(false);
 		tbl.decimal('hours').notNullable().defaultTo(0);
 		tbl.integer('notes').notNullable().defaultTo(0);

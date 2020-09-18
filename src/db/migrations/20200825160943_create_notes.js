@@ -8,7 +8,7 @@ exports.up = function(knex) {
 		tbl.timestamp('start_time').notNullable();
 		tbl.timestamp('end_time').notNullable();
 		tbl.string('tags', 1000);
-		tbl.text('description').notNullable();
+		tbl.text('description');
 		tbl.decimal('hours').notNullable().defaultTo(0);
 		tbl.boolean('pinned').defaultTo(false);
 		tbl.timestamp('created_at').defaultTo(knex.fn.now());
