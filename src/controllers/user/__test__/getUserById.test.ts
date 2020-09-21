@@ -22,7 +22,7 @@ describe('Get User By Id Controller', () => {
 		expect(response.body.success).toBe(true);
 		expect(response.body.message).toEqual(userMessage.success.getUser);
 		expect(response.body.data).toHaveProperty('user');
-		expect(response.body.data.user.user_id).toEqual(userId);
+		expect(response.body.data.user.userId).toEqual(userId);
 		expect(response.body.data.user).not.toHaveProperty('password');
 		expect(response.body.data.user).not.toHaveProperty(
 			'password_reset_link'
