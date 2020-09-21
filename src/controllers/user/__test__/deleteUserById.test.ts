@@ -10,13 +10,13 @@ import {
 
 describe('Delete User Controller', () => {
 	it('deletes user from db', async () => {
-		const { user_id, token } = await createTestUser(
+		const { userId, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
 
 		const response = await request(app)
-			.delete(`/api/users/${user_id}`)
+			.delete(`/api/users/${userId}`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(200);
 
@@ -24,13 +24,13 @@ describe('Delete User Controller', () => {
 		expect(response.body.message).toBe(userMessage.success.deleteUser);
 		expect(response.body.data).toStrictEqual({});
 
-		const user = await User.find({ user_id });
+		const user = await User.find({ user_id: userId });
 
 		expect(user).toBe(undefined);
 	});
 
 	it('throws error if invalid user id provided', async () => {
-		const { user_id, token } = await createTestUser(
+		const { userId, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -46,13 +46,13 @@ describe('Delete User Controller', () => {
 		);
 		expect(response.body.data).toBe(undefined);
 
-		const user = await User.find({ user_id });
+		const user = await User.find({ user_id: userId });
 
-		expect(user.user_id).toEqual(user_id);
+		expect(user.userId).toEqual(userId);
 	});
 
 	it('throws error if no user found', async () => {
-		const { user_id, token } = await createTestUser(
+		const { userId, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -70,8 +70,8 @@ describe('Delete User Controller', () => {
 		);
 		expect(response.body.data).toBe(undefined);
 
-		const user = await User.find({ user_id });
+		const user = await User.find({ user_id: userId });
 
-		expect(user.user_id).toEqual(user_id);
+		expect(user.userId).toEqual(userId);
 	});
 });

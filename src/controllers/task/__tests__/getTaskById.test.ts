@@ -12,17 +12,17 @@ import {
 
 describe('Get Task By Id Controller', () => {
 	it('gets single task from db', async () => {
-		const { user_id, token } = await createTestUser(
+		const { userId, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
 
-		const taskBody = await testTaskBody(user_id);
+		const taskBody = await testTaskBody(userId);
 
-		const { task_id } = await createTestTask({ ...taskBody });
+		const { taskId } = await createTestTask({ ...taskBody });
 
 		const response = await request(app)
-			.get(`/api/tasks/${user_id}/${task_id}`)
+			.get(`/api/tasks/${userId}/${taskId}`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(200);
 
@@ -32,14 +32,14 @@ describe('Get Task By Id Controller', () => {
 	});
 
 	it('throws error if task does not exist', async () => {
-		const { user_id, token } = await createTestUser(
+		const { userId, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
 
 		const fakeId = 500;
 		const response = await request(app)
-			.get(`/api/tasks/${user_id}/${fakeId}`)
+			.get(`/api/tasks/${userId}/${fakeId}`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(404);
 
@@ -50,14 +50,14 @@ describe('Get Task By Id Controller', () => {
 	});
 
 	it('throws error if not logged in', async () => {
-		const { user_id } = await createTestUser('test@gmail.com', '111111');
+		const { userId } = await createTestUser('test@gmail.com', '111111');
 
-		const taskBody = await testTaskBody(user_id);
+		const taskBody = await testTaskBody(userId);
 
-		const { task_id } = await createTestTask({ ...taskBody });
+		const { taskId } = await createTestTask({ ...taskBody });
 
 		const response = await request(app)
-			.get(`/api/tasks/${user_id}/${task_id}`)
+			.get(`/api/tasks/${userId}/${taskId}`)
 			.expect(401);
 
 		expect(response.body.success).toBe(false);
@@ -67,19 +67,18 @@ describe('Get Task By Id Controller', () => {
 	});
 
 	it('throws error if not authorized', async () => {
-		const { user_id } = await createTestUser('test@gmail.com', '111111');
+		const { userId } = await createTestUser('test@gmail.com', '111111');
 		const { token: token2 } = await createTestUser(
 			'test2@gmail.com',
 			'111111'
 		);
 
-		const taskBody = await testTaskBody(user_id);
+		const taskBody = await testTaskBody(userId);
 
-		//@ts-ignore
-		const { task_id } = await createTestTask({ ...taskBody });
+		const { taskId } = await createTestTask({ ...taskBody });
 
 		const response = await request(app)
-			.get(`/api/tasks/${user_id}/${task_id}`)
+			.get(`/api/tasks/${userId}/${taskId}`)
 			.set('Authorization', `Bearer ${token2}`)
 			.expect(403);
 

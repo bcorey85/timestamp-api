@@ -13,25 +13,25 @@ import {
 
 describe('Get Task By Id Controller', () => {
 	it('updates task in db', async () => {
-		const { user_id, token } = await createTestUser(
+		const { userId, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
 
-		const taskBody = await testTaskBody(user_id);
+		const taskBody = await testTaskBody(userId);
 
-		const { task_id, project_id } = await createTestTask({ ...taskBody });
+		const { taskId, projectId } = await createTestTask({ ...taskBody });
 
 		const update = {
 			title: 'test2',
 			description: 'test2',
-			projectId: project_id,
+			projectId: projectId,
 			tags: [ '#1', '#2' ],
 			pinned: true
 		};
 
 		const response = await request(app)
-			.put(`/api/tasks/${user_id}/${task_id}`)
+			.put(`/api/tasks/${userId}/${taskId}`)
 			.set('Authorization', `Bearer ${token}`)
 			.send(update)
 			.expect(200);
@@ -39,14 +39,14 @@ describe('Get Task By Id Controller', () => {
 		expect(response.body.success).toBe(true);
 		expect(response.body.message).toEqual(taskMessage.success.updateTask);
 
-		const taskTest = await Task.find({ task_id });
+		const taskTest = await Task.find({ task_id: taskId });
 		expect(taskTest.title).toEqual(update.title);
 		expect(taskTest.description).toEqual(update.description);
 		expect(taskTest.pinned).toEqual(update.pinned);
 	});
 
 	it('throws error if task does not exist', async () => {
-		const { user_id, token } = await createTestUser(
+		const { userId, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -61,7 +61,7 @@ describe('Get Task By Id Controller', () => {
 
 		const fakeId = 500;
 		const response = await request(app)
-			.put(`/api/tasks/${user_id}/${fakeId}`)
+			.put(`/api/tasks/${userId}/${fakeId}`)
 			.set('Authorization', `Bearer ${token}`)
 			.send(update)
 			.expect(404);
@@ -73,26 +73,25 @@ describe('Get Task By Id Controller', () => {
 	});
 
 	it.todo('throws error if no title');
-	it.todo('throws error if no description');
 	it.todo('throws error if no projectId');
 
 	it('throws error if not logged in', async () => {
-		const { user_id } = await createTestUser('test@gmail.com', '111111');
+		const { userId } = await createTestUser('test@gmail.com', '111111');
 
-		const taskBody = await testTaskBody(user_id);
+		const taskBody = await testTaskBody(userId);
 
-		const { task_id, project_id } = await createTestTask({ ...taskBody });
+		const { taskId, projectId } = await createTestTask({ ...taskBody });
 
 		const update = {
 			title: 'test2',
 			description: 'test2',
-			projectId: project_id,
+			projectId: projectId,
 			tags: [ '#1', '#2' ],
 			pinned: true
 		};
 
 		const response = await request(app)
-			.put(`/api/tasks/${user_id}/${task_id}`)
+			.put(`/api/tasks/${userId}/${taskId}`)
 			.send(update)
 			.expect(401);
 
@@ -103,26 +102,26 @@ describe('Get Task By Id Controller', () => {
 	});
 
 	it('throws error if not authorized', async () => {
-		const { user_id } = await createTestUser('test@gmail.com', '111111');
+		const { userId } = await createTestUser('test@gmail.com', '111111');
 		const { token: token2 } = await createTestUser(
 			'test2@gmail.com',
 			'111111'
 		);
 
-		const taskBody = await testTaskBody(user_id);
+		const taskBody = await testTaskBody(userId);
 
-		const { task_id, project_id } = await createTestTask({ ...taskBody });
+		const { taskId, projectId } = await createTestTask({ ...taskBody });
 
 		const update = {
 			title: 'test2',
 			description: 'test2',
-			projectId: project_id,
+			projectId: projectId,
 			tags: [ '#1', '#2' ],
 			pinned: true
 		};
 
 		const response = await request(app)
-			.put(`/api/tasks/${user_id}/${task_id}`)
+			.put(`/api/tasks/${userId}/${taskId}`)
 			.set('Authorization', `Bearer ${token2}`)
 			.send(update)
 			.expect(403);

@@ -21,23 +21,25 @@ const resetPassword = async (req: Request, res: Response) => {
 		throw new BadRequestError(authMessage.error.badResetRequest);
 	}
 
-	const resetLinkExpired = user.password_reset_expires < new Date(Date.now());
+	const resetLinkExpired =
+		user.passwordResetExpires &&
+		user.passwordResetExpires < new Date(Date.now());
 	if (resetLinkExpired) {
 		throw new BadRequestError(authMessage.error.badResetRequest);
 	}
 
-	await User.updatePassword(user.user_id, password);
-	await User.update(user.user_id, {
+	await User.updatePassword(user.userId, password);
+	await User.update(user.userId, {
 		password_reset_expires: null,
 		password_reset_link: null
 	});
 
-	const token = await User.generateAuthToken(user.user_id);
+	const token = await User.generateAuthToken(user.userId);
 
 	const response = new SuccessResponse({
 		message: authMessage.success.passwordResetComplete,
 		data: {
-			id: user.user_id,
+			id: user.userId,
 			token
 		}
 	});

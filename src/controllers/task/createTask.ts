@@ -5,19 +5,25 @@ import { createMessage } from '../../responses/responseStrings';
 import { User } from '../../models/User';
 import { Task } from '../../models/Task';
 import { Project } from '../../models/Project';
+import { NotFoundError } from '../../responses/errors/NotFoundError';
 
 const createTask = async (req: Request, res: Response) => {
 	const { userId } = req.params;
 	const { title, description, projectId, tags, pinned } = req.body;
 
-	const { user_id } = await User.find({ user_id: userId });
+	const user = await User.find({ user_id: userId });
+
+	if (!user) {
+		throw new NotFoundError();
+	}
+
 	await Task.create({
 		title,
 		description,
 		projectId,
 		tags,
 		pinned,
-		userId: user_id
+		userId: userId
 	});
 
 	const project = await Project.find({ project_id: projectId });

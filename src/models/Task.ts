@@ -1,17 +1,17 @@
 import { db } from '../db';
 
 export interface TaskModel {
-	task_id: number;
-	project_id: number;
-	user_id: number;
+	taskId: number;
+	projectId: number;
+	userId: number;
 	title: string;
 	description: string;
 	tags: string[];
 	pinned: boolean;
 	notes: number;
 	hours: number;
-	created_at: Date;
-	updated_at: Date;
+	createdAt: Date;
+	updatedAt: Date;
 }
 
 export interface NewTask {
@@ -30,6 +30,20 @@ interface SearchCriteria {
 interface Update {
 	[key: string]: any;
 }
+
+const taskAliases = {
+	taskId: 'task_id',
+	projectId: 'project_id',
+	userId: 'user_id',
+	title: 'title',
+	description: 'description',
+	tags: 'tags',
+	pinned: 'pinned',
+	notes: 'notes',
+	hours: 'hours',
+	createdAt: 'created_at',
+	updatedAt: 'updated_at'
+};
 
 class Task {
 	static create = async ({
@@ -56,19 +70,34 @@ class Task {
 			})
 			.returning('*');
 
-		return task[0];
+		return {
+			taskId: task[0].task_id,
+			projectId: task[0].project_id,
+			userId: task[0].user_id,
+			title: task[0].title,
+			description: task[0].description,
+			tags: task[0].tags,
+			pinned: task[0].pinned,
+			notes: task[0].notes,
+			hours: task[0].hours,
+			createdAt: task[0].created_at,
+			updatedAt: task[0].updated_at
+		};
 	};
 
 	static find = async (
 		searchCriteria: SearchCriteria
 	): Promise<TaskModel> => {
-		const task = await db.select('*').from('tasks').where(searchCriteria);
+		const task = await db
+			.select(taskAliases)
+			.from('tasks')
+			.where(searchCriteria);
 		return task[0];
 	};
 
 	static findAll = async (userId: string): Promise<TaskModel[]> => {
 		const tasks = await db
-			.select('*')
+			.select(taskAliases)
 			.from('tasks')
 			.where({ user_id: userId });
 
@@ -84,7 +113,19 @@ class Task {
 			.where({ task_id: taskId })
 			.returning('*');
 
-		return task[0];
+		return {
+			taskId: task[0].task_id,
+			projectId: task[0].project_id,
+			userId: task[0].user_id,
+			title: task[0].title,
+			description: task[0].description,
+			tags: task[0].tags,
+			pinned: task[0].pinned,
+			notes: task[0].notes,
+			hours: task[0].hours,
+			createdAt: task[0].created_at,
+			updatedAt: task[0].updated_at
+		};
 	};
 
 	static delete = async (taskId: string) => {

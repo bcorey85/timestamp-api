@@ -13,19 +13,19 @@ import {
 
 describe('Get All Notes Controller', () => {
 	it('get all notes from db', async () => {
-		const { user_id, token } = await createTestUser(
+		const { userId, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
 
-		const note = await testNoteBody(user_id);
-		const note2 = await testNoteBody(user_id);
+		const note = await testNoteBody(userId);
+		const note2 = await testNoteBody(userId);
 
 		await createTestNote({ ...note });
 		await createTestNote({ ...note2 });
 
 		const response = await request(app)
-			.get(`/api/notes/${user_id}`)
+			.get(`/api/notes/${userId}`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(200);
 
@@ -34,13 +34,13 @@ describe('Get All Notes Controller', () => {
 	});
 
 	it('throws error if not found', async () => {
-		const { user_id, token } = await createTestUser(
+		const { userId, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
 
 		const response = await request(app)
-			.get(`/api/notes/${user_id}`)
+			.get(`/api/notes/${userId}`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(404);
 
@@ -51,10 +51,10 @@ describe('Get All Notes Controller', () => {
 	});
 
 	it('throws error if not logged in', async () => {
-		const { user_id } = await createTestUser('test@gmail.com', '111111');
+		const { userId } = await createTestUser('test@gmail.com', '111111');
 
 		const response = await request(app)
-			.get(`/api/notes/${user_id}`)
+			.get(`/api/notes/${userId}`)
 			.expect(401);
 
 		expect(response.body.success).toBe(false);
@@ -64,7 +64,7 @@ describe('Get All Notes Controller', () => {
 	});
 
 	it('throws error if not authorized', async () => {
-		const { user_id } = await createTestUser('test@gmail.com', '111111');
+		const { userId } = await createTestUser('test@gmail.com', '111111');
 
 		const { token: token2 } = await createTestUser(
 			'test2@gmail.com',
@@ -72,7 +72,7 @@ describe('Get All Notes Controller', () => {
 		);
 
 		const response = await request(app)
-			.get(`/api/notes/${user_id}`)
+			.get(`/api/notes/${userId}`)
 			.set('Authorization', token2)
 			.expect(403);
 

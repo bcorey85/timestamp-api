@@ -13,17 +13,17 @@ import {
 
 describe('Delete Note Controller', () => {
 	it('deletes note from db', async () => {
-		const { user_id, token } = await createTestUser(
+		const { userId, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
 
-		const noteBody = await testNoteBody(user_id);
+		const noteBody = await testNoteBody(userId);
 
-		const { note_id } = await createTestNote({ ...noteBody });
+		const { noteId } = await createTestNote({ ...noteBody });
 
 		const response = await request(app)
-			.delete(`/api/notes/${user_id}/${note_id}`)
+			.delete(`/api/notes/${userId}/${noteId}`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(200);
 
@@ -35,18 +35,18 @@ describe('Delete Note Controller', () => {
 	});
 
 	it('throws error if note not found', async () => {
-		const { user_id, token } = await createTestUser(
+		const { userId, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
 
-		const noteBody = await testNoteBody(user_id);
+		const noteBody = await testNoteBody(userId);
 
 		const note = await createTestNote({ ...noteBody });
 
 		const fakeId = 500;
 		const response = await request(app)
-			.delete(`/api/notes/${user_id}/${fakeId}`)
+			.delete(`/api/notes/${userId}/${fakeId}`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(404);
 
@@ -61,17 +61,17 @@ describe('Delete Note Controller', () => {
 	});
 
 	it('throws error if not logged in', async () => {
-		const { user_id, token } = await createTestUser(
+		const { userId, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
 
-		const noteBody = await testNoteBody(user_id);
+		const noteBody = await testNoteBody(userId);
 
 		const note = await createTestNote({ ...noteBody });
 
 		const response = await request(app)
-			.delete(`/api/notes/${user_id}/${note.note_id}`)
+			.delete(`/api/notes/${userId}/${note.noteId}`)
 			.expect(401);
 
 		expect(response.body.success).toBe(false);
@@ -85,19 +85,19 @@ describe('Delete Note Controller', () => {
 	});
 
 	it('throws error if not authorized', async () => {
-		const { user_id } = await createTestUser('test@gmail.com', '111111');
+		const { userId } = await createTestUser('test@gmail.com', '111111');
 
 		const { token: token2 } = await createTestUser(
 			'test2@gmail.com',
 			'111111'
 		);
 
-		const noteBody = await testNoteBody(user_id);
+		const noteBody = await testNoteBody(userId);
 
 		const note = await createTestNote({ ...noteBody });
 
 		const response = await request(app)
-			.delete(`/api/notes/${user_id}/${note.note_id}`)
+			.delete(`/api/notes/${userId}/${note.noteId}`)
 			.set('Authorization', token2)
 			.expect(403);
 

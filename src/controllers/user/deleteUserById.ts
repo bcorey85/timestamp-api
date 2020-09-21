@@ -19,7 +19,7 @@ const deleteUserById = async (req: Request, res: Response) => {
 		data: {}
 	});
 
-	await User.delete(user.user_id);
+	await User.delete(user.userId);
 
 	res.send(response.body);
 };

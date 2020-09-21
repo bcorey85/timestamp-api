@@ -13,18 +13,17 @@ import { Task } from '../../../models/Task';
 
 describe('Delete Task Controller', () => {
 	it('delete task from db', async () => {
-		const { user_id, token } = await createTestUser(
+		const { userId, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
 
-		const taskBody = await testTaskBody(user_id);
+		const taskBody = await testTaskBody(userId);
 
-		//@ts-ignore
-		const { task_id } = await createTestTask({ ...taskBody });
+		const { taskId } = await createTestTask({ ...taskBody });
 
 		const response = await request(app)
-			.delete(`/api/tasks/${user_id}/${task_id}`)
+			.delete(`/api/tasks/${userId}/${taskId}`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(200);
 
@@ -36,20 +35,19 @@ describe('Delete Task Controller', () => {
 	});
 
 	it('throws error if task does not exist', async () => {
-		const { user_id, token } = await createTestUser(
+		const { userId, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
 
-		const taskBody = await testTaskBody(user_id);
+		const taskBody = await testTaskBody(userId);
 
-		//@ts-ignore
 		await createTestTask({ ...taskBody });
 
 		const fakeId = 500;
 		const response = await request(app)
-			.delete(`/api/tasks/${user_id}/${fakeId}`)
-			.set('Authorization', token)
+			.delete(`/api/tasks/${userId}/${fakeId}`)
+			.set('Authorization', `Bearer ${token}`)
 			.expect(404);
 
 		expect(response.body.success).toBe(false);
@@ -62,15 +60,14 @@ describe('Delete Task Controller', () => {
 	});
 
 	it('throws error if not logged in', async () => {
-		const { user_id } = await createTestUser('test@gmail.com', '111111');
+		const { userId } = await createTestUser('test@gmail.com', '111111');
 
-		const taskBody = await testTaskBody(user_id);
+		const taskBody = await testTaskBody(userId);
 
-		//@ts-ignore
-		const { task_id } = await createTestTask({ ...taskBody });
+		const { taskId } = await createTestTask({ ...taskBody });
 
 		const response = await request(app)
-			.delete(`/api/tasks/${user_id}/${task_id}`)
+			.delete(`/api/tasks/${userId}/${taskId}`)
 			.expect(401);
 
 		expect(response.body.success).toBe(false);
@@ -83,19 +80,18 @@ describe('Delete Task Controller', () => {
 	});
 
 	it('throws error if not authorized', async () => {
-		const { user_id } = await createTestUser('test@gmail.com', '111111');
+		const { userId } = await createTestUser('test@gmail.com', '111111');
 		const { token: token2 } = await createTestUser(
 			'test2@gmail.com',
 			'111111'
 		);
 
-		const taskBody = await testTaskBody(user_id);
+		const taskBody = await testTaskBody(userId);
 
-		//@ts-ignore
-		const { task_id } = await createTestTask({ ...taskBody });
+		const { taskId } = await createTestTask({ ...taskBody });
 
 		const response = await request(app)
-			.delete(`/api/tasks/${user_id}/${task_id}`)
+			.delete(`/api/tasks/${userId}/${taskId}`)
 			.set('Authorization', `Bearer ${token2}`)
 			.expect(403);
 

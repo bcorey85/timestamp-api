@@ -26,10 +26,10 @@ afterAll(async () => {
 });
 
 export const createTestUser = async (email: string, password: string) => {
-	const { user_id } = await User.create(email, password);
-	const token = await User.generateAuthToken(user_id);
+	const { userId } = await User.create(email, password);
+	const token = await User.generateAuthToken(userId);
 
-	return { email, password, user_id, token };
+	return { email, password, userId, token };
 };
 
 export const createTestProject = async ({
@@ -97,18 +97,18 @@ export const createTestNote = async ({
 };
 
 export const testNoteBody = async (userId: string) => {
-	const { project_id } = await createTestProject({
+	const { projectId } = await createTestProject({
 		title: 'test',
 		description: 'test',
 		userId: userId,
 		pinned: false
 	});
 
-	const { task_id } = await createTestTask({
+	const { taskId } = await createTestTask({
 		title: 'test',
 		description: 'test',
 		userId: userId,
-		projectId: project_id.toString(),
+		projectId: projectId.toString(),
 		pinned: false,
 		tags: [ '#tag1', '#tag2' ]
 	});
@@ -116,8 +116,8 @@ export const testNoteBody = async (userId: string) => {
 	return {
 		title: 'test',
 		description: 'test',
-		projectId: project_id.toString(),
-		taskId: task_id.toString(),
+		projectId: projectId.toString(),
+		taskId: taskId.toString(),
 		userId: userId,
 		pinned: false,
 		hours: 1,
@@ -128,7 +128,7 @@ export const testNoteBody = async (userId: string) => {
 };
 
 export const testTaskBody = async (userId: string) => {
-	const { project_id } = await createTestProject({
+	const { projectId } = await createTestProject({
 		title: 'test',
 		description: 'test',
 		userId: userId,
@@ -138,7 +138,7 @@ export const testTaskBody = async (userId: string) => {
 	return {
 		title: 'test',
 		description: 'test',
-		projectId: project_id.toString(),
+		projectId: projectId.toString(),
 		userId: userId,
 		pinned: false,
 		tags: [ '#tag1', '#tag2' ]

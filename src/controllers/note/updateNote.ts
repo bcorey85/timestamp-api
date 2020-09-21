@@ -22,24 +22,24 @@ const updateNote = async (req: Request, res: Response) => {
 
 	const hours = DateTimeService.getHours(startDate, endDate);
 
-	const task = await Task.find({ task_id: note.task_id });
+	const task = await Task.find({ task_id: note.taskId });
 
 	if (!task) {
 		throw new NotFoundError();
 	}
 
-	await Task.update(note.task_id, {
+	await Task.update(note.taskId, {
 		hours: task.hours - note.hours + hours,
 		updated_at: new Date(Date.now())
 	});
 
-	const project = await Project.find({ project_id: note.project_id });
+	const project = await Project.find({ project_id: note.projectId });
 
 	if (!project) {
 		throw new NotFoundError();
 	}
 
-	await Project.update(note.project_id, {
+	await Project.update(note.projectId, {
 		hours: project.hours - note.hours + hours,
 		updated_at: new Date(Date.now())
 	});

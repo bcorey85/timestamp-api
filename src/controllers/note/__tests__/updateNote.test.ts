@@ -13,14 +13,14 @@ import {
 
 describe('Update Note Controller', () => {
 	it('update note in db', async () => {
-		const { user_id, token } = await createTestUser(
+		const { userId, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
 
-		const note = await testNoteBody(user_id);
+		const note = await testNoteBody(userId);
 
-		const { note_id, task_id, project_id } = await createTestNote({
+		const { noteId, taskId, projectId } = await createTestNote({
 			...note
 		});
 
@@ -30,14 +30,14 @@ describe('Update Note Controller', () => {
 			tags: [ '#tag1', '#tag2' ],
 			startTime: new Date(Date.now() - 1000 * 60 * 60),
 			endTime: new Date(Date.now()),
-			taskId: task_id,
-			projectId: project_id,
+			taskId: taskId,
+			projectId: projectId,
 			hours: 1,
 			pinned: false
 		};
 
 		const response = await request(app)
-			.put(`/api/notes/${user_id}/${note_id}`)
+			.put(`/api/notes/${userId}/${noteId}`)
 			.set('Authorization', token)
 			.send(update)
 			.expect(200);
@@ -45,24 +45,23 @@ describe('Update Note Controller', () => {
 		expect(response.body.success).toBe(true);
 		expect(response.body.message).toEqual(noteMessage.success.updateNote);
 
-		const noteTest = await Note.find({ note_id });
+		const noteTest = await Note.find({ note_id: noteId });
 		expect(noteTest.title).toEqual(update.title);
 		expect(noteTest.description).toEqual(update.description);
 	});
 
 	it.todo('throws error if no title');
-	it.todo('throws error if no description');
 	it.todo('throws error if no taskId');
 	it.todo('throws error if no projectId');
 	it.todo('throws error if no startTime');
 	it.todo('throws error if no endTime');
 
 	it('throws error if not logged in', async () => {
-		const { user_id } = await createTestUser('test@gmail.com', '111111');
+		const { userId } = await createTestUser('test@gmail.com', '111111');
 
-		const note = await testNoteBody(user_id);
+		const note = await testNoteBody(userId);
 
-		const { note_id, task_id, project_id } = await createTestNote({
+		const { noteId, taskId, projectId } = await createTestNote({
 			...note
 		});
 
@@ -72,14 +71,14 @@ describe('Update Note Controller', () => {
 			tags: [ '#tag1', '#tag2' ],
 			startTime: new Date(Date.now() - 1000 * 60 * 60),
 			endTime: new Date(Date.now()),
-			taskId: task_id,
-			projectId: project_id,
+			taskId: taskId,
+			projectId: projectId,
 			hours: 1,
 			pinned: false
 		};
 
 		const response = await request(app)
-			.get(`/api/notes/${user_id}/${note_id}`)
+			.get(`/api/notes/${userId}/${noteId}`)
 			.send(update)
 			.expect(401);
 
@@ -90,16 +89,16 @@ describe('Update Note Controller', () => {
 	});
 
 	it('throws error if not authorized', async () => {
-		const { user_id } = await createTestUser('test@gmail.com', '111111');
+		const { userId } = await createTestUser('test@gmail.com', '111111');
 
 		const { token: token2 } = await createTestUser(
 			'test2@gmail.com',
 			'111111'
 		);
 
-		const note = await testNoteBody(user_id);
+		const note = await testNoteBody(userId);
 
-		const { note_id, task_id, project_id } = await createTestNote({
+		const { noteId, taskId, projectId } = await createTestNote({
 			...note
 		});
 
@@ -109,14 +108,14 @@ describe('Update Note Controller', () => {
 			tags: [ '#tag1', '#tag2' ],
 			startTime: new Date(Date.now() - 1000 * 60 * 60),
 			endTime: new Date(Date.now()),
-			taskId: task_id,
-			projectId: project_id,
+			taskId: taskId,
+			projectId: projectId,
 			hours: 1,
 			pinned: false
 		};
 
 		const response = await request(app)
-			.put(`/api/notes/${user_id}/${note_id}`)
+			.put(`/api/notes/${userId}/${noteId}`)
 			.set('Authorization', token2)
 			.send(update)
 			.expect(403);

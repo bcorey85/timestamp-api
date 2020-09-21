@@ -45,12 +45,12 @@ const authUser = async (req: Request, res: Response, next: NextFunction) => {
 			throw new NotAuthorizedError();
 		}
 
-		if (user.user_id.toString() !== req.params.userId) {
+		if (user.userId.toString() !== req.params.userId) {
 			throw new NotAuthorizedError();
 		}
 
 		req.user = {
-			user_id: user.user_id
+			user_id: user.userId
 		};
 
 		next();

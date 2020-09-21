@@ -11,7 +11,7 @@ import { createTestUser, createTestProject } from '../../../test/setup';
 
 describe('Update Project Controller', () => {
 	it('updates project in db', async () => {
-		const { user_id, token } = await createTestUser(
+		const { userId, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -19,7 +19,7 @@ describe('Update Project Controller', () => {
 		const project = await createTestProject({
 			title: 'test',
 			description: 'test',
-			userId: user_id,
+			userId: userId,
 			pinned: false
 		});
 
@@ -29,10 +29,10 @@ describe('Update Project Controller', () => {
 			pinned: true
 		};
 
-		const { project_id } = await Project.find({ title: project.title });
+		const { projectId } = await Project.find({ title: project.title });
 		const response = await request(app)
-			.put(`/api/projects/${user_id}/${project_id}`)
-			.set('Authorization', token)
+			.put(`/api/projects/${userId}/${projectId}`)
+			.set('Authorization', `Bearer ${token}`)
 			.send(update)
 			.expect(200);
 
@@ -41,7 +41,7 @@ describe('Update Project Controller', () => {
 			projectMessage.success.updateProject
 		);
 
-		const updatedProject = await Project.find({ user_id });
+		const updatedProject = await Project.find({ user_id: userId });
 
 		expect(updatedProject.title).toEqual(update.title);
 		expect(updatedProject.description).toEqual(update.description);
@@ -50,10 +50,8 @@ describe('Update Project Controller', () => {
 
 	it.todo('throws error if no title');
 
-	it.todo('throws error if no description');
-
 	it('throws error if not found', async () => {
-		const { user_id, token } = await createTestUser(
+		const { userId, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -61,7 +59,7 @@ describe('Update Project Controller', () => {
 		const project = await createTestProject({
 			title: 'test',
 			description: 'test',
-			userId: user_id,
+			userId: userId,
 			pinned: false
 		});
 
@@ -73,8 +71,8 @@ describe('Update Project Controller', () => {
 
 		const fakeProjectId = 500;
 		const response = await request(app)
-			.put(`/api/projects/${user_id}/${fakeProjectId}`)
-			.set('Authorization', token)
+			.put(`/api/projects/${userId}/${fakeProjectId}`)
+			.set('Authorization', `Bearer ${token}`)
 			.send(update)
 			.expect(404);
 
@@ -83,7 +81,7 @@ describe('Update Project Controller', () => {
 			genericMessage.error.notFound
 		);
 
-		const updatedProject = await Project.find({ user_id });
+		const updatedProject = await Project.find({ user_id: userId });
 
 		expect(updatedProject.title).toEqual(project.title);
 		expect(updatedProject.description).toEqual(project.description);
@@ -91,12 +89,12 @@ describe('Update Project Controller', () => {
 	});
 
 	it('throws error if not logged in', async () => {
-		const { user_id } = await createTestUser('test@gmail.com', '111111');
+		const { userId } = await createTestUser('test@gmail.com', '111111');
 
 		const project = await createTestProject({
 			title: 'test',
 			description: 'test',
-			userId: user_id,
+			userId: userId,
 			pinned: false
 		});
 
@@ -106,9 +104,9 @@ describe('Update Project Controller', () => {
 			pinned: true
 		};
 
-		const { project_id } = await Project.find({ title: project.title });
+		const { projectId } = await Project.find({ title: project.title });
 		const response = await request(app)
-			.put(`/api/projects/${user_id}/${project_id}`)
+			.put(`/api/projects/${userId}/${projectId}`)
 			.send(update)
 			.expect(401);
 
@@ -117,7 +115,7 @@ describe('Update Project Controller', () => {
 			genericMessage.error.notAuthenticated
 		);
 
-		const updatedProject = await Project.find({ user_id });
+		const updatedProject = await Project.find({ user_id: userId });
 
 		expect(updatedProject.title).toEqual(project.title);
 		expect(updatedProject.description).toEqual(project.description);
@@ -125,7 +123,7 @@ describe('Update Project Controller', () => {
 	});
 
 	it('throws error if not authorized', async () => {
-		const { user_id } = await createTestUser('test@gmail.com', '111111');
+		const { userId } = await createTestUser('test@gmail.com', '111111');
 
 		const { token: token2 } = await createTestUser(
 			'test2@gmail.com',
@@ -135,7 +133,7 @@ describe('Update Project Controller', () => {
 		const project = await createTestProject({
 			title: 'test',
 			description: 'test',
-			userId: user_id,
+			userId: userId,
 			pinned: false
 		});
 
@@ -145,10 +143,10 @@ describe('Update Project Controller', () => {
 			pinned: true
 		};
 
-		const { project_id } = await Project.find({ title: project.title });
+		const { projectId } = await Project.find({ title: project.title });
 		const response = await request(app)
-			.put(`/api/projects/${user_id}/${project_id}`)
-			.set('Authorization', token2)
+			.put(`/api/projects/${userId}/${projectId}`)
+			.set('Authorization', `Bearer ${token2}`)
 			.send(update)
 			.expect(403);
 
@@ -157,7 +155,7 @@ describe('Update Project Controller', () => {
 			genericMessage.error.notAuthorized
 		);
 
-		const updatedProject = await Project.find({ user_id });
+		const updatedProject = await Project.find({ user_id: userId });
 
 		expect(updatedProject.title).toEqual(project.title);
 		expect(updatedProject.description).toEqual(project.description);

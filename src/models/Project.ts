@@ -1,16 +1,16 @@
 import { db } from '../db';
 
 export interface ProjectModel {
-	project_id: number;
-	user_id: number;
+	projectId: number;
+	userId: number;
 	title: string;
 	description: string;
 	pinned: boolean;
 	notes: number;
 	tasks: number;
 	hours: number;
-	created_at: Date;
-	updated_at: Date;
+	createdAt: Date;
+	updatedAt: Date;
 }
 
 export interface NewProject {
@@ -28,6 +28,19 @@ interface Update {
 	[key: string]: any;
 }
 
+const projectAliases = {
+	projectId: 'project_id',
+	userId: 'user_id',
+	title: 'title',
+	description: 'description',
+	pinned: 'pinned',
+	hours: 'hours',
+	tasks: 'tasks',
+	notes: 'notes',
+	createdAt: 'created_at',
+	updatedAt: 'updated_at'
+};
+
 class Project {
 	static create = async ({
 		title,
@@ -39,22 +52,34 @@ class Project {
 			.insert({ title, description, pinned, user_id: userId })
 			.returning('*');
 
-		return project[0];
+		return {
+			projectId: project[0].project_id,
+			userId: project[0].user_id,
+			title: project[0].title,
+			description: project[0].description,
+			pinned: project[0].pinned,
+			hours: project[0].hours,
+			tasks: project[0].tasks,
+			notes: project[0].notes,
+			createdAt: project[0].created_at,
+			updatedAt: project[0].updated_at
+		};
 	};
 
 	static find = async (
 		searchCriteria: SearchCriteria
 	): Promise<ProjectModel> => {
 		const project = await db
-			.select('*')
+			.select(projectAliases)
 			.from('projects')
 			.where(searchCriteria);
+
 		return project[0];
 	};
 
 	static findAll = async (userId: string): Promise<ProjectModel[]> => {
 		const projects = await db
-			.select('*')
+			.select(projectAliases)
 			.from('projects')
 			.where({ user_id: userId });
 
@@ -70,7 +95,18 @@ class Project {
 			.where({ project_id: projectId })
 			.returning('*');
 
-		return project[0];
+		return {
+			projectId: project[0].project_id,
+			userId: project[0].user_id,
+			title: project[0].title,
+			description: project[0].description,
+			pinned: project[0].pinned,
+			hours: project[0].hours,
+			tasks: project[0].tasks,
+			notes: project[0].notes,
+			createdAt: project[0].created_at,
+			updatedAt: project[0].updated_at
+		};
 	};
 
 	static delete = async (projectId: string) => {

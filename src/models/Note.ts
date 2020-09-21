@@ -1,19 +1,19 @@
 import { db } from '../db';
 
 export interface NoteModel {
-	note_id: number;
-	task_id: number;
-	project_id: number;
-	user_id: number;
+	noteId: number;
+	taskId: number;
+	projectId: number;
+	userId: number;
 	title: string;
 	description: string;
-	start: Date;
-	end: Date;
+	startTime: Date;
+	endTime: Date;
 	hours: number;
 	tags: string;
 	pinned: boolean;
-	created_at: Date;
-	updated_at: Date;
+	createdAt: Date;
+	updatedAt: Date;
 }
 
 export interface NewNote {
@@ -36,6 +36,22 @@ interface SearchCriteria {
 interface Update {
 	[key: string]: any;
 }
+
+const noteAliases = {
+	noteId: 'note_id',
+	taskId: 'task_id',
+	projectId: 'project_id',
+	userId: 'user_id',
+	title: 'title',
+	description: 'description',
+	startTime: 'start_time',
+	endTime: 'end_time',
+	hours: 'hours',
+	tags: 'tags',
+	pinned: 'pinned',
+	createdAt: 'created_at',
+	updatedAt: 'updated_at'
+};
 
 class Note {
 	static create = async ({
@@ -70,19 +86,36 @@ class Note {
 			})
 			.returning('*');
 
-		return note[0];
+		return {
+			noteId: note[0].note_id,
+			taskId: note[0].task_id,
+			projectId: note[0].project_id,
+			userId: note[0].user_id,
+			title: note[0].title,
+			description: note[0].description,
+			startTime: note[0].start_time,
+			endTime: note[0].end_time,
+			hours: note[0].hours,
+			tags: note[0].tags,
+			pinned: note[0].pinned,
+			createdAt: note[0].created_at,
+			updatedAt: note[0].updated_at
+		};
 	};
 
 	static find = async (
 		searchCriteria: SearchCriteria
 	): Promise<NoteModel> => {
-		const note = await db.select('*').from('notes').where(searchCriteria);
+		const note = await db
+			.select(noteAliases)
+			.from('notes')
+			.where(searchCriteria);
 		return note[0];
 	};
 
 	static findAll = async (userId: string): Promise<NoteModel[]> => {
 		const notes = await db
-			.select('*')
+			.select(noteAliases)
 			.from('notes')
 			.where({ user_id: userId });
 
@@ -98,7 +131,21 @@ class Note {
 			.where({ note_id: noteId })
 			.returning('*');
 
-		return note[0];
+		return {
+			noteId: note[0].note_id,
+			taskId: note[0].task_id,
+			projectId: note[0].project_id,
+			userId: note[0].user_id,
+			title: note[0].title,
+			description: note[0].description,
+			startTime: note[0].start_time,
+			endTime: note[0].end_time,
+			hours: note[0].hours,
+			tags: note[0].tags,
+			pinned: note[0].pinned,
+			createdAt: note[0].created_at,
+			updatedAt: note[0].updated_at
+		};
 	};
 
 	static delete = async (noteId: string) => {

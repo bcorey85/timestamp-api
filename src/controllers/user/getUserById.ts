@@ -32,7 +32,7 @@ type itemArray = ProjectModel[] | TaskModel[] | NoteModel[];
 
 const filterRecentItems = (itemArray: itemArray, amount: number = 10) => {
 	const sortedArr = itemArray.sort(
-		(a: any, b: any) => b.updated_at.valueOf() - a.updated_at.valueOf()
+		(a: any, b: any) => b.updatedAt.valueOf() - a.updatedAt.valueOf()
 	);
 
 	return sortedArr.slice(0, amount);
@@ -46,14 +46,14 @@ const getUserById = async (req: Request, res: Response) => {
 		throw new NotFoundError();
 	}
 
-	const { projects, notes, tasks } = await getUserData(user.user_id);
+	const { projects, notes, tasks } = await getUserData(user.userId);
 	const hours = calculateTotalUserHours(notes);
 
 	const userResponse = {
 		email: user.email,
-		last_login: user.last_login,
-		created_at: user.created_at,
-		user_id: user.user_id,
+		lastLogin: user.lastLogin,
+		createdAt: user.createdAt,
+		userId: user.userId,
 		projects,
 		tasks,
 		notes,

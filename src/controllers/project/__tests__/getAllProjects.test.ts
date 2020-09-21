@@ -10,7 +10,7 @@ import { createTestProject, createTestUser } from '../../../test/setup';
 
 describe('Get All Projects Controller', () => {
 	it('gets all project from db', async () => {
-		const { user_id, token } = await createTestUser(
+		const { userId, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -18,19 +18,19 @@ describe('Get All Projects Controller', () => {
 		const project1 = await createTestProject({
 			title: 'test',
 			description: 'test',
-			userId: user_id,
+			userId: userId,
 			pinned: false
 		});
 
 		const project2 = await createTestProject({
 			title: 'test2',
 			description: 'test2',
-			userId: user_id,
+			userId: userId,
 			pinned: false
 		});
 
 		const response = await request(app)
-			.get(`/api/projects/${user_id}/`)
+			.get(`/api/projects/${userId}/`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(200);
 
@@ -44,13 +44,13 @@ describe('Get All Projects Controller', () => {
 	});
 
 	it('throws error if not found', async () => {
-		const { user_id, token } = await createTestUser(
+		const { userId, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
 
 		const response = await request(app)
-			.get(`/api/projects/${user_id}/`)
+			.get(`/api/projects/${userId}/`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(404);
 
@@ -61,10 +61,10 @@ describe('Get All Projects Controller', () => {
 	});
 
 	it('throws error if not logged in', async () => {
-		const { user_id } = await createTestUser('test@gmail.com', '111111');
+		const { userId } = await createTestUser('test@gmail.com', '111111');
 
 		const response = await request(app)
-			.get(`/api/projects/${user_id}/`)
+			.get(`/api/projects/${userId}/`)
 			.expect(401);
 
 		expect(response.body.success).toBe(false);
@@ -74,7 +74,7 @@ describe('Get All Projects Controller', () => {
 	});
 
 	it('throws error if not authorized', async () => {
-		const { user_id, token } = await createTestUser(
+		const { userId, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -90,15 +90,15 @@ describe('Get All Projects Controller', () => {
 		};
 
 		const createdResponse = await request(app)
-			.post(`/api/projects/${user_id}/`)
+			.post(`/api/projects/${userId}/`)
 			.set('Authorization', `Bearer ${token}`)
 			.send(project)
 			.expect(201);
 
-		const { project_id } = await Project.find({ title: project.title });
+		const { projectId } = await Project.find({ title: project.title });
 
 		const getResponse = await request(app)
-			.get(`/api/projects/${user_id}/${project_id}`)
+			.get(`/api/projects/${userId}/${projectId}`)
 			.set('Authorization', `Bearer ${token2}`)
 			.send(project)
 			.expect(403);

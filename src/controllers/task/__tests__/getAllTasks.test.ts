@@ -12,19 +12,19 @@ import {
 
 describe('Get All Tasks Controller', () => {
 	it('gets all tasks db', async () => {
-		const { user_id, token } = await createTestUser(
+		const { userId, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
 
-		const taskBody1 = await testTaskBody(user_id);
-		const taskBody2 = await testTaskBody(user_id);
+		const taskBody1 = await testTaskBody(userId);
+		const taskBody2 = await testTaskBody(userId);
 
 		await createTestTask({ ...taskBody1 });
 		await createTestTask({ ...taskBody2 });
 
 		const response = await request(app)
-			.get(`/api/tasks/${user_id}`)
+			.get(`/api/tasks/${userId}`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(200);
 
@@ -35,14 +35,14 @@ describe('Get All Tasks Controller', () => {
 	});
 
 	it('throws error if tasks do not exist', async () => {
-		const { user_id, token } = await createTestUser(
+		const { userId, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
 
 		const response = await request(app)
-			.get(`/api/tasks/${user_id}`)
-			.set('Authorization', token)
+			.get(`/api/tasks/${userId}`)
+			.set('Authorization', `Bearer ${token}`)
 			.expect(404);
 
 		expect(response.body.success).toBe(false);
@@ -52,10 +52,10 @@ describe('Get All Tasks Controller', () => {
 	});
 
 	it('throws error if not logged in', async () => {
-		const { user_id } = await createTestUser('test@gmail.com', '111111');
+		const { userId } = await createTestUser('test@gmail.com', '111111');
 
 		const response = await request(app)
-			.get(`/api/tasks/${user_id}`)
+			.get(`/api/tasks/${userId}`)
 			.expect(401);
 
 		expect(response.body.success).toBe(false);
@@ -65,14 +65,14 @@ describe('Get All Tasks Controller', () => {
 	});
 
 	it('throws error if not authorized', async () => {
-		const { user_id } = await createTestUser('test@gmail.com', '111111');
+		const { userId } = await createTestUser('test@gmail.com', '111111');
 		const { token: token2 } = await createTestUser(
 			'test2@gmail.com',
 			'111111'
 		);
 
 		const response = await request(app)
-			.get(`/api/tasks/${user_id}`)
+			.get(`/api/tasks/${userId}`)
 			.set('Authorization', `Bearer ${token2}`)
 			.expect(403);
 

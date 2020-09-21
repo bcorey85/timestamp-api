@@ -9,7 +9,7 @@ import { createTestUser } from '../../../test/setup';
 
 describe('Create Project Controller', () => {
 	it('creates new project in db', async () => {
-		const { user_id, token } = await createTestUser(
+		const { userId, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -20,7 +20,7 @@ describe('Create Project Controller', () => {
 		};
 
 		const response = await request(app)
-			.post(`/api/projects/${user_id}`)
+			.post(`/api/projects/${userId}`)
 			.set('Authorization', `Bearer ${token}`)
 			.send(project)
 			.expect(201);
@@ -30,7 +30,7 @@ describe('Create Project Controller', () => {
 	});
 
 	it('throws error if no title', async () => {
-		const { user_id, token } = await createTestUser(
+		const { userId, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
@@ -41,7 +41,7 @@ describe('Create Project Controller', () => {
 		};
 
 		const response = await request(app)
-			.post(`/api/projects/${user_id}`)
+			.post(`/api/projects/${userId}`)
 			.set('Authorization', `Bearer ${token}`)
 			.send(project)
 			.expect(400);
@@ -51,38 +51,12 @@ describe('Create Project Controller', () => {
 			createMessage.error.title
 		);
 
-		const userProjects = await Project.findAll(user_id);
-		expect(userProjects.length).toBe(0);
-	});
-
-	it('throws error if no description', async () => {
-		const { user_id, token } = await createTestUser(
-			'test@gmail.com',
-			'111111'
-		);
-
-		const project = {
-			title: 'test title',
-			description: ''
-		};
-
-		const response = await request(app)
-			.post(`/api/projects/${user_id}`)
-			.set('Authorization', `Bearer ${token}`)
-			.send(project)
-			.expect(400);
-
-		expect(response.body.success).toBe(false);
-		expect(response.body.errors[0].message).toEqual(
-			createMessage.error.description
-		);
-
-		const userProjects = await Project.findAll(user_id);
+		const userProjects = await Project.findAll(userId);
 		expect(userProjects.length).toBe(0);
 	});
 
 	it('throws error if not logged in', async () => {
-		const { user_id } = await createTestUser('test@gmail.com', '111111');
+		const { userId } = await createTestUser('test@gmail.com', '111111');
 
 		const project = {
 			title: 'test title',
@@ -90,7 +64,7 @@ describe('Create Project Controller', () => {
 		};
 
 		const response = await request(app)
-			.post(`/api/projects/${user_id}`)
+			.post(`/api/projects/${userId}`)
 			.send(project)
 			.expect(401);
 
@@ -101,7 +75,7 @@ describe('Create Project Controller', () => {
 	});
 
 	it('throws error if not authorized', async () => {
-		const { user_id } = await createTestUser('test@gmail.com', '111111');
+		const { userId } = await createTestUser('test@gmail.com', '111111');
 
 		const { token: token2 } = await createTestUser(
 			'test2@gmail.com',
@@ -114,7 +88,7 @@ describe('Create Project Controller', () => {
 		};
 
 		const response = await request(app)
-			.post(`/api/projects/${user_id}`)
+			.post(`/api/projects/${userId}`)
 			.set('Authorization', `Bearer ${token2}`)
 			.send(project)
 			.expect(403);

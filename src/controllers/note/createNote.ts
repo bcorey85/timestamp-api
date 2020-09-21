@@ -7,6 +7,7 @@ import { Note } from '../../models/Note';
 import { Project } from '../../models/Project';
 import { Task } from '../../models/Task';
 import { DateTimeService } from '../../util/DateTimeService';
+import { NotFoundError } from '../../responses/errors/NotFoundError';
 
 const createNote = async (req: Request, res: Response) => {
 	const { userId } = req.params;
@@ -38,13 +39,17 @@ const createNote = async (req: Request, res: Response) => {
 		notes: task.notes + 1
 	});
 
-	const { user_id } = await User.find({ user_id: userId });
+	const user = await User.find({ user_id: userId });
+
+	if (!user) {
+		throw new NotFoundError();
+	}
 
 	await Note.create({
 		title,
 		description,
 		projectId,
-		userId: user_id,
+		userId: userId,
 		taskId,
 		tags,
 		startTime: startDate.toISOString(),

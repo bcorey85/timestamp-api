@@ -12,17 +12,17 @@ import {
 
 describe('Get Note by Id Controller', () => {
 	it('get single note from db', async () => {
-		const { user_id, token } = await createTestUser(
+		const { userId, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
 
-		const note = await testNoteBody(user_id);
+		const note = await testNoteBody(userId);
 
-		const { note_id, title } = await createTestNote({ ...note });
+		const { noteId, title } = await createTestNote({ ...note });
 
 		const response = await request(app)
-			.get(`/api/notes/${user_id}/${note_id}`)
+			.get(`/api/notes/${userId}/${noteId}`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(200);
 
@@ -32,14 +32,14 @@ describe('Get Note by Id Controller', () => {
 	});
 
 	it('throws error if not found', async () => {
-		const { user_id, token } = await createTestUser(
+		const { userId, token } = await createTestUser(
 			'test@gmail.com',
 			'111111'
 		);
 
 		const fakeId = 500;
 		const response = await request(app)
-			.get(`/api/notes/${user_id}/${fakeId}`)
+			.get(`/api/notes/${userId}/${fakeId}`)
 			.set('Authorization', `Bearer ${token}`)
 			.expect(404);
 
@@ -50,13 +50,13 @@ describe('Get Note by Id Controller', () => {
 	});
 
 	it('throws error if not logged in', async () => {
-		const { user_id } = await createTestUser('test@gmail.com', '111111');
+		const { userId } = await createTestUser('test@gmail.com', '111111');
 
-		const note = await testNoteBody(user_id);
+		const note = await testNoteBody(userId);
 
-		const { note_id } = await createTestNote({ ...note });
+		const { noteId } = await createTestNote({ ...note });
 		const response = await request(app)
-			.get(`/api/notes/${user_id}/${note_id}`)
+			.get(`/api/notes/${userId}/${noteId}`)
 			.expect(401);
 
 		expect(response.body.success).toBe(false);
@@ -66,19 +66,19 @@ describe('Get Note by Id Controller', () => {
 	});
 
 	it('throws error if not authorized', async () => {
-		const { user_id } = await createTestUser('test@gmail.com', '111111');
+		const { userId } = await createTestUser('test@gmail.com', '111111');
 
 		const { token: token2 } = await createTestUser(
 			'test2@gmail.com',
 			'111111'
 		);
 
-		const note = await testNoteBody(user_id);
+		const note = await testNoteBody(userId);
 
-		const { note_id } = await createTestNote({ ...note });
+		const { noteId } = await createTestNote({ ...note });
 
 		const response = await request(app)
-			.get(`/api/notes/${user_id}/${note_id}`)
+			.get(`/api/notes/${userId}/${noteId}`)
 			.set('Authorization', token2)
 			.expect(403);
 

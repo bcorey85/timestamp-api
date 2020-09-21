@@ -15,13 +15,13 @@ const deleteTask = async (req: Request, res: Response) => {
 		throw new NotFoundError();
 	}
 
-	const project = await Project.find({ project_id: task.project_id });
+	const project = await Project.find({ project_id: task.projectId });
 
 	if (!project) {
 		throw new NotFoundError();
 	}
 
-	await Project.update(task.project_id, {
+	await Project.update(task.projectId, {
 		tasks: project.tasks - 1,
 		hours: project.hours - task.hours,
 		notes: project.notes - task.notes,

@@ -32,10 +32,10 @@ describe('Find User', () => {
 		const userTwo = await createTestUser('test2@gmail.com', '123456');
 
 		const response2 = await User.find({
-			user_id: userTwo.user_id
+			user_id: userTwo.userId
 		});
 
-		expect(response2.user_id).toEqual(userTwo.user_id);
+		expect(response2.userId).toEqual(userTwo.userId);
 	});
 });
 
@@ -82,12 +82,12 @@ describe('Update user', () => {
 		const user = await User.create('test@gmail.com', '123456');
 
 		const newEmail = 'test2@gmail.com';
-		await User.update(user.user_id, {
+		await User.update(user.userId, {
 			email: newEmail
 		});
 
 		const updatedUser = await User.find({
-			user_id: user.user_id
+			user_id: user.userId
 		});
 
 		expect(updatedUser.email).toBe(newEmail);
@@ -98,13 +98,13 @@ describe('Update user', () => {
 
 		const newPass = '111111';
 		const newEmail = 'test2@gmail.com';
-		await User.update(user.user_id, {
+		await User.update(user.userId, {
 			password: newPass,
 			email: newEmail
 		});
 
 		const updatedUser = await User.find({
-			user_id: user.user_id
+			user_id: user.userId
 		});
 
 		const passMatch = await User.comparePassword(updatedUser, newPass);
@@ -117,7 +117,7 @@ describe('Delete user', () => {
 	it('should delete user from db', async () => {
 		const user = await User.create('test@gmail.com', '123456');
 
-		await User.delete(user.user_id);
+		await User.delete(user.userId);
 
 		const users = await User.findAll();
 

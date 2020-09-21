@@ -7,10 +7,7 @@ import { createTestUser } from '../../../test/setup';
 
 describe('Forgot Password Controller', () => {
 	it('sends forgot password email and adds reset token to db', async () => {
-		const { email, password } = await createTestUser(
-			'test@test.com',
-			'123456'
-		);
+		const { email } = await createTestUser('test@test.com', '123456');
 
 		const response = await request(app)
 			.post('/api/auth/forgot-password')
@@ -26,15 +23,12 @@ describe('Forgot Password Controller', () => {
 		);
 
 		const user = await User.find({ email });
-		expect(user.password_reset_link).not.toBe(null);
-		expect(user.password_reset_expires).not.toBe(null);
+		expect(user.passwordResetLink).not.toBe(null);
+		expect(user.passwordResetExpires).not.toBe(null);
 	});
 
 	it('returns generic response and doesnt send email if no user found', async () => {
-		const { email, password } = await createTestUser(
-			'test@test.com',
-			'123456'
-		);
+		const { email } = await createTestUser('test@test.com', '123456');
 
 		const response = await request(app)
 			.post('/api/auth/forgot-password')
@@ -47,7 +41,7 @@ describe('Forgot Password Controller', () => {
 		expect(sendPasswordResetEmail).not.toHaveBeenCalled();
 
 		const user = await User.find({ email });
-		expect(user.password_reset_link).toBe(null);
-		expect(user.password_reset_expires).toBe(null);
+		expect(user.passwordResetLink).toBe(null);
+		expect(user.passwordResetExpires).toBe(null);
 	});
 });

@@ -20,7 +20,7 @@ const forgotPassword = async (req: Request, res: Response) => {
 		return res.status(200).send(invalidEmailResponse.body);
 	}
 
-	const resetToken = await User.generateResetPasswordToken(user.user_id);
+	const resetToken = await User.generateResetPasswordToken(user.userId);
 
 	const resetLink = `${process.env
 		.FRONTEND_URL}/auth/reset-password/${resetToken}`;

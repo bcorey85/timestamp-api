@@ -15,12 +15,12 @@ const signup = async (req: Request, res: Response) => {
 	}
 
 	const user = await User.create(email, password);
-	const token = await User.generateAuthToken(user.user_id);
+	const token = await User.generateAuthToken(user.userId);
 
 	const response = new SuccessResponse({
 		message: authMessage.success.registerSuccess,
 		data: {
-			id: user.user_id,
+			id: user.userId,
 			token
 		}
 	});
