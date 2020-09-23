@@ -9,8 +9,7 @@ export const sendPasswordResetEmail = async (
 	resetLink: string
 ): Promise<void> => {
 	const msg = {
-		// to: email,
-		to: process.env.TEST_EMAIL!,
+		to: email,
 		from: `Timestamp App <${adminEmailAccount}>`,
 		subject: 'Timestamp App - Reset Password Link',
 		html: `A password reset request was made for Timestamp account. <a href=${resetLink}>Click here to reset your password.</a>`
