@@ -1,9 +1,6 @@
 class DateTimeService {
 	static getHours = (startDate: Date, endDate: Date) => {
-		return parseFloat(
-			(Math.abs(startDate.getTime() - endDate.getTime()) /
-				3600000).toFixed(2)
-		);
+		return Math.abs(startDate.getTime() - endDate.getTime()) / 3600000;
 	};
 
 	static parse = (date: string) => {

@@ -22,8 +22,7 @@ const calculateTotalUserHours = (notes: NoteModel[]) => {
 	if (notes.length > 0) {
 		hours = notes
 			.map(note => Number(note.hours))
-			.reduce((acc, cur) => acc + cur)
-			.toFixed(1);
+			.reduce((acc, cur) => acc + cur);
 	}
 	return hours;
 };
