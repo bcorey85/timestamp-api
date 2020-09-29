@@ -46,6 +46,7 @@ router.put(
 	[
 		userIdParamRequired,
 		taskIdParamRequired,
+		projectRequired,
 		titleRequired,
 		projectRequired
 	],

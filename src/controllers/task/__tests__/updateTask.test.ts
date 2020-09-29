@@ -2,6 +2,7 @@ import request from 'supertest';
 import { app } from '../../../app';
 import { Task } from '../../../models/Task';
 import {
+	createMessage,
 	genericMessage,
 	taskMessage
 } from '../../../responses/responseStrings';
@@ -70,10 +71,76 @@ describe('Get Task By Id Controller', () => {
 		expect(response.body.errors[0].message).toEqual(
 			genericMessage.error.notFound
 		);
+
+		const taskTest = await Task.findAll(userId);
+		expect(taskTest.length).toEqual(0);
 	});
 
-	it.todo('throws error if no title');
-	it.todo('throws error if no projectId');
+	it('throws error if no title', async () => {
+		const { userId, token } = await createTestUser(
+			'test@gmail.com',
+			'111111'
+		);
+
+		const taskBody = await testTaskBody(userId);
+
+		const { taskId } = await createTestTask({ ...taskBody });
+
+		const update = {
+			title: '',
+			description: 'test2',
+			projectId: 500,
+			tags: [ '#1', '#2' ],
+			pinned: true
+		};
+
+		const response = await request(app)
+			.put(`/api/tasks/${userId}/${taskId}`)
+			.set('Authorization', `Bearer ${token}`)
+			.send(update)
+			.expect(400);
+
+		expect(response.body.success).toBe(false);
+		expect(response.body.errors[0].message).toEqual(
+			createMessage.error.title
+		);
+
+		const taskTest = await Task.find({ task_id: taskId });
+		expect(taskTest.title).not.toEqual(update.title);
+	});
+
+	it('throws error if no projectId', async () => {
+		const { userId, token } = await createTestUser(
+			'test@gmail.com',
+			'111111'
+		);
+
+		const taskBody = await testTaskBody(userId);
+
+		const { taskId } = await createTestTask({ ...taskBody });
+
+		const update = {
+			title: 'test2',
+			description: 'test2',
+			projectId: null,
+			tags: [ '#1', '#2' ],
+			pinned: true
+		};
+
+		const response = await request(app)
+			.put(`/api/tasks/${userId}/${taskId}`)
+			.set('Authorization', `Bearer ${token}`)
+			.send(update)
+			.expect(400);
+
+		expect(response.body.success).toBe(false);
+		expect(response.body.errors[0].message).toEqual(
+			createMessage.error.project
+		);
+
+		const taskTest = await Task.find({ task_id: taskId });
+		expect(taskTest.projectId).not.toEqual(update.projectId);
+	});
 
 	it('throws error if not logged in', async () => {
 		const { userId } = await createTestUser('test@gmail.com', '111111');

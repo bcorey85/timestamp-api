@@ -4,7 +4,8 @@ import {
 	authMessage,
 	requestValidationMessage,
 	projectMessage,
-	genericMessage
+	genericMessage,
+	createMessage
 } from '../../../responses/responseStrings';
 import { Project } from '../../../models/Project';
 import { createTestUser, createTestProject } from '../../../test/setup';
@@ -48,7 +49,41 @@ describe('Update Project Controller', () => {
 		expect(updatedProject.pinned).toEqual(update.pinned);
 	});
 
-	it.todo('throws error if no title');
+	it('throws error if no title', async () => {
+		const { userId, token } = await createTestUser(
+			'test@gmail.com',
+			'111111'
+		);
+
+		const project = await createTestProject({
+			title: 'test',
+			description: 'test',
+			userId: userId,
+			pinned: false
+		});
+
+		const update = {
+			title: '',
+			description: 'test2',
+			pinned: true
+		};
+
+		const { projectId } = await Project.find({ title: project.title });
+		const response = await request(app)
+			.put(`/api/projects/${userId}/${projectId}`)
+			.set('Authorization', `Bearer ${token}`)
+			.send(update)
+			.expect(400);
+
+		expect(response.body.success).toBe(false);
+		expect(response.body.errors[0].message).toEqual(
+			createMessage.error.title
+		);
+
+		const updatedProject = await Project.find({ user_id: userId });
+
+		expect(updatedProject.title).not.toEqual(update.title);
+	});
 
 	it('throws error if not found', async () => {
 		const { userId, token } = await createTestUser(

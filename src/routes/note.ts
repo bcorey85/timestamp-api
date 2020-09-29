@@ -56,6 +56,8 @@ router.put(
 	[
 		userIdParamRequired,
 		noteIdParamRequired,
+		taskRequired,
+		projectRequired,
 		titleRequired,
 		startTimeRequired,
 		endTimeRequired,

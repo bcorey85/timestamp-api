@@ -1,8 +1,10 @@
 import request from 'supertest';
 import { app } from '../../../app';
 import {
+	createMessage,
 	genericMessage,
-	noteMessage
+	noteMessage,
+	requestValidationMessage
 } from '../../../responses/responseStrings';
 import { Note } from '../../../models/Note';
 import {
@@ -50,11 +52,200 @@ describe('Update Note Controller', () => {
 		expect(noteTest.description).toEqual(update.description);
 	});
 
-	it.todo('throws error if no title');
-	it.todo('throws error if no taskId');
-	it.todo('throws error if no projectId');
-	it.todo('throws error if no startTime');
-	it.todo('throws error if no endTime');
+	it('throws error if no title', async () => {
+		const { userId, token } = await createTestUser(
+			'test@gmail.com',
+			'111111'
+		);
+
+		const note = await testNoteBody(userId);
+
+		const { noteId, taskId, projectId } = await createTestNote({
+			...note
+		});
+
+		const update = {
+			title: '',
+			description: 'test2',
+			tags: [ '#tag1', '#tag2' ],
+			startTime: new Date(Date.now() - 1000 * 60 * 60),
+			endTime: new Date(Date.now()),
+			taskId: taskId,
+			projectId: projectId,
+			hours: 1,
+			pinned: false
+		};
+
+		const response = await request(app)
+			.put(`/api/notes/${userId}/${noteId}`)
+			.set('Authorization', token)
+			.send(update)
+			.expect(400);
+
+		expect(response.body.success).toBe(false);
+		expect(response.body.errors[0].message).toEqual(
+			createMessage.error.title
+		);
+
+		const noteTest = await Note.find({ note_id: noteId });
+		expect(noteTest.title).not.toEqual(update.title);
+	});
+
+	it('throws error if no taskId', async () => {
+		const { userId, token } = await createTestUser(
+			'test@gmail.com',
+			'111111'
+		);
+
+		const note = await testNoteBody(userId);
+
+		const { noteId, projectId } = await createTestNote({
+			...note
+		});
+
+		const update = {
+			title: 'test2',
+			description: 'test2',
+			tags: [ '#tag1', '#tag2' ],
+			startTime: new Date(Date.now() - 1000 * 60 * 60),
+			endTime: new Date(Date.now()),
+			taskId: null,
+			projectId: projectId,
+			hours: 1,
+			pinned: false
+		};
+
+		const response = await request(app)
+			.put(`/api/notes/${userId}/${noteId}`)
+			.set('Authorization', token)
+			.send(update)
+			.expect(400);
+
+		expect(response.body.success).toBe(false);
+		expect(response.body.errors[0].message).toEqual(
+			createMessage.error.task
+		);
+
+		const noteTest = await Note.find({ note_id: noteId });
+		expect(noteTest.taskId).not.toEqual(update.taskId);
+	});
+
+	it('throws error if no projectId', async () => {
+		const { userId, token } = await createTestUser(
+			'test@gmail.com',
+			'111111'
+		);
+
+		const note = await testNoteBody(userId);
+
+		const { noteId, taskId } = await createTestNote({
+			...note
+		});
+
+		const update = {
+			title: 'test2',
+			description: 'test2',
+			tags: [ '#tag1', '#tag2' ],
+			startTime: new Date(Date.now() - 1000 * 60 * 60),
+			endTime: new Date(Date.now()),
+			taskId: taskId,
+			projectId: null,
+			hours: 1,
+			pinned: false
+		};
+
+		const response = await request(app)
+			.put(`/api/notes/${userId}/${noteId}`)
+			.set('Authorization', token)
+			.send(update)
+			.expect(400);
+
+		expect(response.body.success).toBe(false);
+		expect(response.body.errors[0].message).toEqual(
+			createMessage.error.project
+		);
+
+		const noteTest = await Note.find({ note_id: noteId });
+		expect(noteTest.projectId).not.toEqual(update.projectId);
+	});
+
+	it('throws error if no startTime', async () => {
+		const { userId, token } = await createTestUser(
+			'test@gmail.com',
+			'111111'
+		);
+
+		const note = await testNoteBody(userId);
+
+		const { noteId, taskId, projectId } = await createTestNote({
+			...note
+		});
+
+		const update = {
+			title: 'test2',
+			description: 'test2',
+			tags: [ '#tag1', '#tag2' ],
+			startTime: null,
+			endTime: new Date(Date.now()),
+			taskId: taskId,
+			projectId: projectId,
+			hours: 1,
+			pinned: false
+		};
+
+		const response = await request(app)
+			.put(`/api/notes/${userId}/${noteId}`)
+			.set('Authorization', token)
+			.send(update)
+			.expect(400);
+
+		expect(response.body.success).toBe(false);
+		expect(response.body.errors[0].message).toEqual(
+			createMessage.error.start
+		);
+
+		const noteTest = await Note.find({ note_id: noteId });
+		expect(noteTest.startTime).not.toEqual(update.startTime);
+	});
+
+	it('throws error if no endTime', async () => {
+		const { userId, token } = await createTestUser(
+			'test@gmail.com',
+			'111111'
+		);
+
+		const note = await testNoteBody(userId);
+
+		const { noteId, taskId, projectId } = await createTestNote({
+			...note
+		});
+
+		const update = {
+			title: 'test2',
+			description: 'test2',
+			tags: [ '#tag1', '#tag2' ],
+			startTime: new Date(Date.now()),
+			endTime: null,
+			taskId: taskId,
+			projectId: projectId,
+			hours: 1,
+			pinned: false
+		};
+
+		const response = await request(app)
+			.put(`/api/notes/${userId}/${noteId}`)
+			.set('Authorization', token)
+			.send(update)
+			.expect(400);
+
+		expect(response.body.success).toBe(false);
+		expect(response.body.errors[0].message).toEqual(
+			createMessage.error.end
+		);
+
+		const noteTest = await Note.find({ note_id: noteId });
+		expect(noteTest.endTime).not.toEqual(update.endTime);
+	});
 
 	it('throws error if not logged in', async () => {
 		const { userId } = await createTestUser('test@gmail.com', '111111');
