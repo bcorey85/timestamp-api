@@ -10,9 +10,9 @@ import { Task, TaskModel } from '../../models/Task';
 import { Note, NoteModel } from '../../models/Note';
 
 const getUserData = async (userId: string) => {
-	const projects = await Project.findAll(userId);
-	const tasks = await Task.findAll(userId);
-	const notes = await Note.findAll(userId);
+	const projects = await Project.findAll({ user_id: userId });
+	const tasks = await Task.findAll({ user_id: userId });
+	const notes = await Note.findAll({ user_id: userId });
 
 	return { projects, tasks, notes };
 };
@@ -46,6 +46,7 @@ const getUserById = async (req: Request, res: Response) => {
 	}
 
 	const { projects, notes, tasks } = await getUserData(user.userId);
+
 	const hours = calculateTotalUserHours(notes);
 
 	const userResponse = {

@@ -1,6 +1,6 @@
 import { Error } from '../responseTypes';
 
-export abstract class CustomError extends Error {
+abstract class CustomError extends Error {
 	abstract statusCode: number;
 
 	constructor(message: string) {
@@ -10,3 +10,5 @@ export abstract class CustomError extends Error {
 
 	abstract formatErrors(): Error[];
 }
+
+export { CustomError };

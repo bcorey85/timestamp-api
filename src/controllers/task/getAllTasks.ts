@@ -7,7 +7,7 @@ import { NotFoundError } from '../../responses/errors/NotFoundError';
 const getAllTasks = async (req: Request, res: Response) => {
 	const { user_id } = req.user!;
 
-	const tasks = await Task.findAll(user_id);
+	const tasks = await Task.findAll({ user_id });
 
 	if (tasks.length === 0) {
 		throw new NotFoundError();

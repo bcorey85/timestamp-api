@@ -1,4 +1,5 @@
 import { db } from '../db';
+import { ItemService } from '../util/ItemService';
 
 export interface TaskModel {
 	taskId: number;
@@ -54,18 +55,13 @@ class Task {
 		tags,
 		pinned
 	}: NewTask): Promise<TaskModel> => {
-		let tagString;
-		if (tags) {
-			tagString = tags.join(',');
-		}
-
 		const task = await db('tasks')
 			.insert({
 				title,
 				description,
 				user_id: userId,
 				project_id: projectId,
-				tags: tagString || null,
+				tags: ItemService.mergeTags(tags),
 				pinned
 			})
 			.returning('*');
@@ -95,11 +91,13 @@ class Task {
 		return task[0];
 	};
 
-	static findAll = async (userId: string): Promise<TaskModel[]> => {
+	static findAll = async (
+		searchCriteria: SearchCriteria
+	): Promise<TaskModel[]> => {
 		const tasks = await db
 			.select(taskAliases)
 			.from('tasks')
-			.where({ user_id: userId });
+			.where(searchCriteria);
 
 		return tasks;
 	};

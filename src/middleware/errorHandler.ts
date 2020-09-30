@@ -17,7 +17,6 @@ const errorHandler = (
 		return res.status(err.statusCode).send(serverResponse);
 	}
 
-	console.error(err);
 	return res.status(500).send({
 		errors: [ { message: genericMessage.error.serverError } ]
 	});

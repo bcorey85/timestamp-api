@@ -1,7 +1,7 @@
 import { CustomError } from './CustomError';
 import { genericMessage } from '../responseStrings';
 
-export class NotFoundError extends CustomError {
+class NotFoundError extends CustomError {
 	statusCode = 404;
 
 	constructor() {
@@ -17,3 +17,5 @@ export class NotFoundError extends CustomError {
 		];
 	}
 }
+
+export { NotFoundError };

@@ -9,15 +9,7 @@ describe('Create Note', () => {
 
 		await Note.create({ ...newNote });
 
-		const notes = await Note.findAll(userId);
-		console.log(
-			typeof notes[0].startTime,
-			new Date(newNote.startTime).toISOString()
-		);
-		console.log(
-			typeof new Date(notes[0].startTime).toISOString(),
-			typeof new Date(newNote.startTime).toISOString()
-		);
+		const notes = await Note.findAll({ user_id: userId });
 
 		expect(notes.length).toBe(1);
 		expect(notes[0].title).toEqual(newNote.title);
@@ -69,7 +61,7 @@ describe('Find All Tasks', () => {
 		const noteTwo = await createTestNote(newNote);
 		const noteThree = await createTestNote(newNote);
 
-		const notes = await Note.findAll(userId);
+		const notes = await Note.findAll({ user_id: userId });
 		expect(notes.length).toEqual(3);
 	});
 });
@@ -103,7 +95,7 @@ describe('Delete Note', () => {
 
 		await Note.delete(noteId.toString());
 
-		const notes = await Note.findAll(userId);
+		const notes = await Note.findAll({ user_id: userId });
 
 		expect(notes).toStrictEqual([]);
 	});

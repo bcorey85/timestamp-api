@@ -1,4 +1,5 @@
 import { db } from '../db';
+import { ItemService } from '../util/ItemService';
 
 export interface NoteModel {
 	noteId: number;
@@ -66,11 +67,6 @@ class Note {
 		tags,
 		pinned
 	}: NewNote): Promise<NoteModel> => {
-		let tagString;
-		if (tags) {
-			tagString = tags.join(',');
-		}
-
 		const note = await db('notes')
 			.insert({
 				title,
@@ -81,7 +77,7 @@ class Note {
 				start_time: startTime,
 				end_time: endTime,
 				hours,
-				tags: tagString || null,
+				tags: ItemService.mergeTags(tags),
 				pinned
 			})
 			.returning('*');
@@ -113,11 +109,13 @@ class Note {
 		return note[0];
 	};
 
-	static findAll = async (userId: string): Promise<NoteModel[]> => {
+	static findAll = async (
+		searchCriteria: SearchCriteria
+	): Promise<NoteModel[]> => {
 		const notes = await db
 			.select(noteAliases)
 			.from('notes')
-			.where({ user_id: userId });
+			.where(searchCriteria);
 
 		return notes;
 	};

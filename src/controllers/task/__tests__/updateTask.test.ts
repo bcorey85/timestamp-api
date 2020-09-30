@@ -72,7 +72,7 @@ describe('Get Task By Id Controller', () => {
 			genericMessage.error.notFound
 		);
 
-		const taskTest = await Task.findAll(userId);
+		const taskTest = await Task.findAll({ user_id: userId });
 		expect(taskTest.length).toEqual(0);
 	});
 

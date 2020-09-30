@@ -1,28 +1,35 @@
 import { Request, Response } from 'express';
-import { Task } from '../../models/Task';
+import { Task, TaskModel } from '../../models/Task';
 import { SuccessResponse } from '../../responses/SuccessResponse';
 import { taskMessage } from '../../responses/responseStrings';
 import { NotFoundError } from '../../responses/errors/NotFoundError';
+import { ItemService } from '../../util/ItemService';
+
+const handleTaskMoveCheck = (task: TaskModel, projectId: string) => {
+	const moveToNewProject = projectId !== task.projectId.toString();
+
+	if (moveToNewProject) {
+		ItemService.moveTaskToNewProject(task, projectId);
+	}
+};
 
 const updateTask = async (req: Request, res: Response) => {
 	const { taskId } = req.params;
-	const { title, description, tags, pinned } = req.body;
+	const { title, description, tags, pinned, projectId } = req.body;
 
 	const task = await Task.find({ task_id: taskId });
-
 	if (!task) {
 		throw new NotFoundError();
 	}
 
-	let tagString;
-	if (tags) {
-		tagString = tags.join(',');
-	}
+	const tagString = ItemService.mergeTags(tags);
+
+	handleTaskMoveCheck(task, projectId);
 
 	await Task.update(taskId, {
 		title,
 		description,
-		tags: tagString || null,
+		tags: tagString,
 		pinned,
 		updated_at: new Date(Date.now())
 	});

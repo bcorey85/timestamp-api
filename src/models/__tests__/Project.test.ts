@@ -14,7 +14,7 @@ describe('Create Task', () => {
 
 		await Project.create({ ...newProject });
 
-		const projects = await Project.findAll(userId);
+		const projects = await Project.findAll({ user_id: userId });
 		expect(projects.length).toBe(1);
 		expect(projects[0].title).toEqual(newProject.title);
 		expect(projects[0].description).toEqual(newProject.description);
@@ -55,7 +55,7 @@ describe('Find All Projects', () => {
 		const projectTwo = await Project.create({ ...newProject });
 		const projectThree = await Project.create({ ...newProject });
 
-		const projects = await Project.findAll(userId);
+		const projects = await Project.findAll({ user_id: userId });
 		expect(projects.length).toBe(3);
 	});
 });
@@ -94,7 +94,7 @@ describe('Delete Task', () => {
 
 		await Project.delete(projectId.toString());
 
-		const projects = await Project.findAll(userId);
+		const projects = await Project.findAll({ user_id: userId });
 
 		expect(projects).toStrictEqual([]);
 	});

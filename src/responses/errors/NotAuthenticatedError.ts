@@ -1,7 +1,7 @@
 import { CustomError } from './CustomError';
 import { genericMessage } from '../responseStrings';
 
-export class NotAuthenticatedError extends CustomError {
+class NotAuthenticatedError extends CustomError {
 	statusCode = 401;
 
 	constructor() {
@@ -17,3 +17,5 @@ export class NotAuthenticatedError extends CustomError {
 		];
 	}
 }
+
+export { NotAuthenticatedError };

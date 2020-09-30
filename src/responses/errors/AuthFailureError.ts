@@ -1,6 +1,6 @@
 import { CustomError } from './CustomError';
 
-export class AuthFailureError extends CustomError {
+class AuthFailureError extends CustomError {
 	statusCode = 400;
 
 	constructor(public message: string) {
@@ -16,3 +16,5 @@ export class AuthFailureError extends CustomError {
 		];
 	}
 }
+
+export { AuthFailureError };

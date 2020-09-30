@@ -77,11 +77,13 @@ class Project {
 		return project[0];
 	};
 
-	static findAll = async (userId: string): Promise<ProjectModel[]> => {
+	static findAll = async (
+		searchCriteria: SearchCriteria
+	): Promise<ProjectModel[]> => {
 		const projects = await db
 			.select(projectAliases)
 			.from('projects')
-			.where({ user_id: userId });
+			.where(searchCriteria);
 
 		return projects;
 	};

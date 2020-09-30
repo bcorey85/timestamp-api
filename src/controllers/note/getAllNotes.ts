@@ -7,7 +7,7 @@ import { NotFoundError } from '../../responses/errors/NotFoundError';
 const getAllNotes = async (req: Request, res: Response) => {
 	const { user_id } = req.user!;
 
-	const notes = await Note.findAll(user_id);
+	const notes = await Note.findAll({ user_id });
 
 	if (notes.length === 0) {
 		throw new NotFoundError();

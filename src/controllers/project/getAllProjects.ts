@@ -7,7 +7,7 @@ import { NotFoundError } from '../../responses/errors/NotFoundError';
 const getAllProjects = async (req: Request, res: Response) => {
 	const { user_id } = req.user!;
 
-	const projects = await Project.findAll(user_id);
+	const projects = await Project.findAll({ user_id });
 
 	if (projects.length === 0) {
 		throw new NotFoundError();

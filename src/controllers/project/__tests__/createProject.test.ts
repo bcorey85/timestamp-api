@@ -51,7 +51,7 @@ describe('Create Project Controller', () => {
 			createMessage.error.title
 		);
 
-		const userProjects = await Project.findAll(userId);
+		const userProjects = await Project.findAll({ user_id: userId });
 		expect(userProjects.length).toBe(0);
 	});
 

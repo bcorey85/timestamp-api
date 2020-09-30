@@ -9,7 +9,7 @@ describe('Create Task', () => {
 
 		await Task.create({ ...newTask });
 
-		const tasks = await Task.findAll(userId);
+		const tasks = await Task.findAll({ user_id: userId });
 		expect(tasks.length).toBe(1);
 		expect(tasks[0].title).toEqual(newTask.title);
 		expect(tasks[0].description).toEqual(newTask.description);
@@ -46,7 +46,7 @@ describe('Find All Tasks', () => {
 		const taskTwo = await createTestTask(newTask);
 		const taskThree = await createTestTask(newTask);
 
-		const tasks = await Task.findAll(userId);
+		const tasks = await Task.findAll({ user_id: userId });
 		expect(tasks.length).toEqual(3);
 	});
 });
@@ -80,7 +80,7 @@ describe('Delete Task', () => {
 
 		await Task.delete(taskId.toString());
 
-		const tasks = await Task.findAll(userId);
+		const tasks = await Task.findAll({ user_id: userId });
 
 		expect(tasks).toStrictEqual([]);
 	});
