@@ -4,7 +4,7 @@
 	"description": "notes and productivity app",
 	"main": "index.js",
 	"scripts": {
-		"test": "env-cmd -f ./src/config/test.env jest --watchAll --runInBand",
+		"test": "env-cmd -f ./src/config/test.env jest --runInBand",
 		"test:coverage": "env-cmd -f ./src/config/test.env jest --coverage --runInBand",
 		"dev": "env-cmd -f ./src/config/dev.env ts-node-dev src/index.ts",
 		"build": "tsc",

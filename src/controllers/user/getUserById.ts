@@ -1,41 +1,11 @@
 import { Request, Response } from 'express';
-import moment from 'moment';
 
 import { User } from '../../models/User';
 import { SuccessResponse } from '../../responses/SuccessResponse';
 import { userMessage } from '../../responses/responseStrings';
 import { NotFoundError } from '../../responses/errors/NotFoundError';
-import { Project, ProjectModel } from '../../models/Project';
-import { Task, TaskModel } from '../../models/Task';
-import { Note, NoteModel } from '../../models/Note';
 
-const getUserData = async (userId: string) => {
-	const projects = await Project.findAll({ user_id: userId });
-	const tasks = await Task.findAll({ user_id: userId });
-	const notes = await Note.findAll({ user_id: userId });
-
-	return { projects, tasks, notes };
-};
-
-const calculateTotalUserHours = (notes: NoteModel[]) => {
-	let hours;
-	if (notes.length > 0) {
-		hours = notes
-			.map(note => Number(note.hours))
-			.reduce((acc, cur) => acc + cur);
-	}
-	return hours;
-};
-
-type itemArray = ProjectModel[] | TaskModel[] | NoteModel[];
-
-const filterRecentItems = (itemArray: itemArray, amount: number = 10) => {
-	const sortedArr = itemArray.sort(
-		(a: any, b: any) => b.updatedAt.valueOf() - a.updatedAt.valueOf()
-	);
-
-	return sortedArr.slice(0, amount);
-};
+import { UserService } from '../../util/UserService';
 
 const getUserById = async (req: Request, res: Response) => {
 	const { userId } = req.params;
@@ -45,9 +15,26 @@ const getUserById = async (req: Request, res: Response) => {
 		throw new NotFoundError();
 	}
 
-	const { projects, notes, tasks } = await getUserData(user.userId);
+	const existingData = await UserService.getUserData(user.userId);
 
-	const hours = calculateTotalUserHours(notes);
+	const secondsSinceCreation =
+		(new Date().getTime() - user.createdAt.getTime()) / 1000;
+
+	const isInitialLogin = secondsSinceCreation < 2;
+
+	let projects, notes, tasks;
+	if (isInitialLogin) {
+		const tutorialData = await UserService.getTutorialData(user.userId);
+		projects = [ tutorialData.project ];
+		tasks = [ tutorialData.task ];
+		notes = [ tutorialData.note ];
+	} else {
+		projects = existingData.projects;
+		tasks = existingData.tasks;
+		notes = existingData.notes;
+	}
+
+	const hours = UserService.calculateTotalUserHours(notes);
 
 	const userResponse = {
 		email: user.email,
@@ -59,9 +46,9 @@ const getUserById = async (req: Request, res: Response) => {
 		notes,
 		hours: hours || 0,
 		recentItems: {
-			notes: filterRecentItems(notes, 6),
-			tasks: filterRecentItems(tasks, 6),
-			projects: filterRecentItems(projects, 6)
+			notes: UserService.filterRecentItems(notes, 6),
+			tasks: UserService.filterRecentItems(tasks, 6),
+			projects: UserService.filterRecentItems(projects, 6)
 		}
 	};
 
