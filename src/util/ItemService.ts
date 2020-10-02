@@ -31,7 +31,7 @@ class ItemService {
 			throw new NotFoundError();
 		}
 
-		const updatedPrevious = await Task.update(previousTaskId, {
+		await Task.update(previousTaskId, {
 			hours: previousTask.hours - hours,
 			notes: previousTask.notes - 1
 		});
@@ -41,7 +41,7 @@ class ItemService {
 			throw new NotFoundError();
 		}
 
-		const updatedNext = await Task.update(taskId, {
+		await Task.update(taskId, {
 			hours: newTask.hours + hours,
 			notes: newTask.notes + 1
 		});

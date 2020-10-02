@@ -5,7 +5,8 @@ import {
 	getTaskById,
 	getAllTasks,
 	updateTask,
-	deleteTask
+	deleteTask,
+	taskActions
 } from '../controllers/task';
 import {
 	userIdParamRequired,
@@ -53,6 +54,14 @@ router.put(
 	validateRequest,
 	authUser,
 	updateTask
+);
+
+router.put(
+	'/:userId/:taskId/actions',
+	[],
+	validateRequest,
+	authUser,
+	taskActions
 );
 
 router.delete(

@@ -11,6 +11,8 @@ exports.up = function(knex) {
 		tbl.text('description');
 		tbl.decimal('hours').notNullable().defaultTo(0);
 		tbl.boolean('pinned').defaultTo(false);
+		tbl.timestamp('completed_on').defaultTo(null);
+		tbl.string('completed_by');
 		tbl.timestamp('created_at').defaultTo(knex.fn.now());
 		tbl.timestamp('updated_at').defaultTo(knex.fn.now());
 

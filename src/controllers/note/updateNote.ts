@@ -49,6 +49,7 @@ const handleNoteMoveCheck = async (
 
 const updateNote = async (req: Request, res: Response) => {
 	const { noteId } = req.params;
+
 	const {
 		title,
 		startTime,

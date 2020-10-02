@@ -35,7 +35,8 @@ export const taskMessage = {
 	success: {
 		getTask: 'Task request success',
 		updateTask: 'Task update successful',
-		deleteTask: 'Task delete successful'
+		deleteTask: 'Task delete successful',
+		completeTask: 'Task completion status updated'
 	},
 	error: {}
 };
@@ -44,7 +45,8 @@ export const projectMessage = {
 	success: {
 		getProject: 'Project request success',
 		updateProject: 'Project update successful',
-		deleteProject: 'Project delete successful'
+		deleteProject: 'Project delete successful',
+		completeProject: 'Project completion status updated'
 	},
 	error: {}
 };
@@ -72,7 +74,8 @@ export const genericMessage = {
 			'An unknown server error occurred. Please try again later.',
 		notFound: 'Unable to locate the requested resource.',
 		notAuthenticated: 'Please login and try your request again.',
-		notAuthorized: 'Unable to access the requested resource.'
+		notAuthorized: 'Unable to access the requested resource.',
+		noActionQuery: 'Unable to resolve actions for this request'
 	}
 };
 

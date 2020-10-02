@@ -5,7 +5,8 @@ import {
 	getProjectById,
 	getAllProjects,
 	updateProject,
-	deleteProject
+	deleteProject,
+	projectActions
 } from '../controllers/project';
 import {
 	userIdParamRequired,
@@ -46,6 +47,14 @@ router.put(
 	validateRequest,
 	authUser,
 	updateProject
+);
+
+router.put(
+	'/:userId/:projectId/actions',
+	[],
+	validateRequest,
+	authUser,
+	projectActions
 );
 
 router.delete(

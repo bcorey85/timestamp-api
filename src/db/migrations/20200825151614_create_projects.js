@@ -8,6 +8,8 @@ exports.up = function(knex) {
 		tbl.decimal('hours').notNullable().defaultTo(0);
 		tbl.integer('tasks').notNullable().defaultTo(0);
 		tbl.integer('notes').notNullable().defaultTo(0);
+		tbl.timestamp('completed_on').defaultTo(null);
+		tbl.string('completed_by');
 		tbl.timestamp('created_at').defaultTo(knex.fn.now());
 		tbl.timestamp('updated_at').defaultTo(knex.fn.now());
 

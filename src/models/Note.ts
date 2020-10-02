@@ -15,6 +15,8 @@ export interface NoteModel {
 	pinned: boolean;
 	createdAt: Date;
 	updatedAt: Date;
+	completedOn: Date;
+	completedBy: string;
 }
 
 export interface NewNote {
@@ -51,7 +53,9 @@ const noteAliases = {
 	tags: 'tags',
 	pinned: 'pinned',
 	createdAt: 'created_at',
-	updatedAt: 'updated_at'
+	updatedAt: 'updated_at',
+	completedOn: 'completed_on',
+	completedBy: 'completed_by'
 };
 
 class Note {
@@ -95,7 +99,9 @@ class Note {
 			tags: note[0].tags,
 			pinned: note[0].pinned,
 			createdAt: note[0].created_at,
-			updatedAt: note[0].updated_at
+			updatedAt: note[0].updated_at,
+			completedOn: note[0].completed_on,
+			completedBy: note[0].completed_by
 		};
 	};
 
@@ -142,7 +148,9 @@ class Note {
 			tags: note[0].tags,
 			pinned: note[0].pinned,
 			createdAt: note[0].created_at,
-			updatedAt: note[0].updated_at
+			updatedAt: note[0].updated_at,
+			completedOn: note[0].completed_on,
+			completedBy: note[0].completed_by
 		};
 	};
 

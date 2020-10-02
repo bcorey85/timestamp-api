@@ -11,6 +11,8 @@ export interface ProjectModel {
 	hours: number;
 	createdAt: Date;
 	updatedAt: Date;
+	completedOn: Date;
+	completedBy: string;
 }
 
 export interface NewProject {
@@ -38,7 +40,9 @@ const projectAliases = {
 	tasks: 'tasks',
 	notes: 'notes',
 	createdAt: 'created_at',
-	updatedAt: 'updated_at'
+	updatedAt: 'updated_at',
+	completedOn: 'completed_on',
+	completedBy: 'completed_by'
 };
 
 class Project {
@@ -62,7 +66,9 @@ class Project {
 			tasks: project[0].tasks,
 			notes: project[0].notes,
 			createdAt: project[0].created_at,
-			updatedAt: project[0].updated_at
+			updatedAt: project[0].updated_at,
+			completedOn: project[0].completed_on,
+			completedBy: project[0].completed_by
 		};
 	};
 
@@ -107,7 +113,9 @@ class Project {
 			tasks: project[0].tasks,
 			notes: project[0].notes,
 			createdAt: project[0].created_at,
-			updatedAt: project[0].updated_at
+			updatedAt: project[0].updated_at,
+			completedOn: project[0].completed_on,
+			completedBy: project[0].completed_by
 		};
 	};
 

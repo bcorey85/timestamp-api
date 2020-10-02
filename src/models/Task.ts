@@ -13,6 +13,8 @@ export interface TaskModel {
 	hours: number;
 	createdAt: Date;
 	updatedAt: Date;
+	completedOn: Date;
+	completedBy: string;
 }
 
 export interface NewTask {
@@ -43,7 +45,9 @@ const taskAliases = {
 	notes: 'notes',
 	hours: 'hours',
 	createdAt: 'created_at',
-	updatedAt: 'updated_at'
+	updatedAt: 'updated_at',
+	completedOn: 'completed_on',
+	completedBy: 'completed_by'
 };
 
 class Task {
@@ -77,7 +81,9 @@ class Task {
 			notes: task[0].notes,
 			hours: task[0].hours,
 			createdAt: task[0].created_at,
-			updatedAt: task[0].updated_at
+			updatedAt: task[0].updated_at,
+			completedOn: task[0].completed_on,
+			completedBy: task[0].completed_by
 		};
 	};
 
@@ -122,7 +128,9 @@ class Task {
 			notes: task[0].notes,
 			hours: task[0].hours,
 			createdAt: task[0].created_at,
-			updatedAt: task[0].updated_at
+			updatedAt: task[0].updated_at,
+			completedOn: task[0].completed_on,
+			completedBy: task[0].completed_by
 		};
 	};
 

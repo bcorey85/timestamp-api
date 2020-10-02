@@ -5,7 +5,8 @@ import {
 	getNoteById,
 	getAllNotes,
 	updateNote,
-	deleteNote
+	deleteNote,
+	noteActions
 } from '../controllers/note';
 import {
 	userIdParamRequired,
@@ -67,6 +68,14 @@ router.put(
 	validateRequest,
 	authUser,
 	updateNote
+);
+
+router.put(
+	'/:userId/:noteId/actions',
+	[],
+	validateRequest,
+	authUser,
+	noteActions
 );
 
 router.delete(
