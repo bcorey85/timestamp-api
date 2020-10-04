@@ -17,13 +17,13 @@ const handleNoteMoveCheck = async (
 	const moveToNewProject = projectId !== note.projectId.toString();
 	const moveToNewTask = taskId !== note.taskId.toString();
 	if (moveToNewProject) {
-		ItemService.moveNoteToNewTask(note, taskId, hours);
-		ItemService.moveNoteToNewProject(note, projectId, hours, {
+		Note.moveToNewTask(note, taskId, hours);
+		Note.moveToNewProject(note, projectId, hours, {
 			updateNoteTotals: true,
 			updateHours: true
 		});
 	} else if (!moveToNewProject && moveToNewTask) {
-		ItemService.moveNoteToNewTask(note, taskId, hours);
+		Note.moveToNewTask(note, taskId, hours);
 	} else {
 		const task = await Task.find({ task_id: note.taskId });
 		if (!task) {

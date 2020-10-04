@@ -9,7 +9,7 @@ const handleTaskMoveCheck = (task: TaskModel, projectId: string) => {
 	const moveToNewProject = projectId !== task.projectId.toString();
 
 	if (moveToNewProject) {
-		ItemService.moveTaskToNewProject(task, projectId);
+		Task.moveToNewProject(task, projectId);
 	}
 };
 

@@ -1,4 +1,6 @@
 import { Task } from '../Task';
+import { Project } from '../Project';
+import { createTestData } from '../../test/setup';
 
 import { createTestTask, createTestUser, testTaskBody } from '../../test/setup';
 
@@ -83,5 +85,37 @@ describe('Delete Task', () => {
 		const tasks = await Task.findAll({ user_id: userId });
 
 		expect(tasks).toStrictEqual([]);
+	});
+});
+
+describe('Move Task', () => {
+	it('moves a task to new project', async () => {
+		const { project1, project2, task1 } = await createTestData();
+
+		expect(project1.tasks).toEqual(2);
+		expect(project1.notes).toEqual(2);
+		expect(project1.hours).toEqual(2);
+
+		expect(project2.tasks).toEqual(0);
+		expect(project2.notes).toEqual(0);
+		expect(project2.hours).toEqual(0);
+
+		await Task.moveToNewProject(task1, project2.projectId.toString());
+
+		const updatedTask = await Task.find({ task_id: task1.taskId });
+		const startingProject = await Project.find({
+			project_id: project1.projectId
+		});
+		const destinationProject = await Project.find({
+			project_id: project2.projectId
+		});
+
+		expect(updatedTask.projectId).toEqual(destinationProject.projectId);
+		expect(startingProject.tasks).toEqual(1);
+		expect(startingProject.notes).toEqual(0);
+		expect(startingProject.hours).toEqual(0);
+		expect(destinationProject.tasks).toEqual(1);
+		expect(destinationProject.notes).toEqual(2);
+		expect(destinationProject.hours).toEqual(2);
 	});
 });

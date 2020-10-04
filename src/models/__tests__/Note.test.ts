@@ -1,4 +1,7 @@
 import { Note } from '../Note';
+import { Task } from '../Task';
+import { Project } from '../Project';
+import { createTestData } from '../../test/setup';
 
 import { createTestNote, createTestUser, testNoteBody } from '../../test/setup';
 
@@ -98,5 +101,67 @@ describe('Delete Note', () => {
 		const notes = await Note.findAll({ user_id: userId });
 
 		expect(notes).toStrictEqual([]);
+	});
+});
+
+describe('Move Note', () => {
+	it('moves a note to new task', async () => {
+		const { task1, task2, note1, userId } = await createTestData();
+
+		expect(task1.notes).toEqual(2);
+		expect(task1.hours).toEqual(2);
+
+		await Note.moveToNewTask(note1, task2.taskId.toString(), 1);
+
+		const updatedNote = await Note.find({ note_id: note1.noteId });
+		const startingTask = await Task.find({
+			task_id: task1.taskId
+		});
+		const destinationTask = await Task.find({
+			task_id: task2.taskId
+		});
+
+		expect(updatedNote.projectId).toEqual(destinationTask.projectId);
+		expect(startingTask.notes).toEqual(1);
+		expect(startingTask.hours).toEqual(1);
+		expect(destinationTask.notes).toEqual(1);
+		expect(destinationTask.hours).toEqual(1);
+	});
+
+	it('moves a note to new project', async () => {
+		const {
+			project1,
+			project2,
+			task1,
+			task3,
+			note1
+		} = await createTestData();
+
+		expect(project1.notes).toEqual(2);
+		expect(project1.hours).toEqual(2);
+
+		expect(project2.notes).toEqual(0);
+		expect(project2.hours).toEqual(0);
+
+		// Move new task data first
+		await Note.moveToNewTask(note1, task3.taskId.toString(), 1);
+		await Note.moveToNewProject(note1, project2.projectId.toString(), 1, {
+			updateNoteTotals: true,
+			updateHours: true
+		});
+
+		const updatedNote = await Note.find({ note_id: note1.noteId });
+		const startingProject = await Project.find({
+			project_id: project1.projectId
+		});
+		const destinationProject = await Project.find({
+			project_id: project2.projectId
+		});
+
+		expect(updatedNote.projectId).toEqual(destinationProject.projectId);
+		expect(startingProject.notes).toEqual(1);
+		expect(startingProject.hours).toEqual(1);
+		expect(destinationProject.notes).toEqual(1);
+		expect(destinationProject.hours).toEqual(1);
 	});
 });

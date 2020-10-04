@@ -96,6 +96,99 @@ export const createTestNote = async ({
 	return note;
 };
 
+export const createTestData = async () => {
+	const { userId } = await createTestUser('test@gmail.com', '111111');
+
+	const project1 = await createTestProject({
+		title: 'test project 1',
+		description: 'test',
+		userId,
+		pinned: true
+	});
+
+	const project2 = await createTestProject({
+		title: 'test project 2',
+		description: 'test',
+		userId,
+		pinned: true
+	});
+
+	const task1 = await createTestTask({
+		title: 'test task 1',
+		description: 'test',
+		projectId: project1.projectId.toString(),
+		tags: [],
+		userId,
+		pinned: true
+	});
+
+	const task2 = await createTestTask({
+		title: 'test task 2',
+		description: 'test',
+		projectId: project1.projectId.toString(),
+		tags: [],
+		userId,
+		pinned: true
+	});
+
+	const task3 = await createTestTask({
+		title: 'test task 3',
+		description: 'test',
+		projectId: project2.projectId.toString(),
+		tags: [],
+		userId,
+		pinned: true
+	});
+
+	const note1 = await createTestNote({
+		title: 'test note 1',
+		description: 'test',
+		projectId: project1.projectId.toString(),
+		taskId: task1.taskId.toString(),
+		tags: [],
+		startTime: new Date().toISOString(),
+		endTime: new Date(Date.now() + 1000 * 60 * 60).toISOString(),
+		hours: 1,
+		userId,
+		pinned: true
+	});
+
+	const note2 = await createTestNote({
+		title: 'test note 2',
+		description: 'test',
+		projectId: project1.projectId.toString(),
+		taskId: task1.taskId.toString(),
+		tags: [],
+		startTime: new Date().toISOString(),
+		endTime: new Date(Date.now() + 1000 * 60 * 60).toISOString(),
+		hours: 1,
+		userId,
+		pinned: true
+	});
+
+	const updatedProject1 = await Project.update(project1.projectId, {
+		tasks: 2,
+		notes: 2,
+		hours: 2
+	});
+
+	const updatedTask1 = await Task.update(task1.taskId, {
+		notes: 2,
+		hours: 2
+	});
+
+	return {
+		userId,
+		project1: updatedProject1,
+		project2,
+		task1: updatedTask1,
+		task2,
+		task3,
+		note1,
+		note2
+	};
+};
+
 export const testNoteBody = async (userId: string) => {
 	const { projectId } = await createTestProject({
 		title: 'test',

@@ -1,5 +1,8 @@
 import { db } from '../db';
 import { ItemService } from '../util/ItemService';
+import { Task } from './Task';
+import { Project } from './Project';
+import { NotFoundError } from '../responses/errors/NotFoundError';
 
 export interface NoteModel {
 	noteId: number;
@@ -156,6 +159,78 @@ class Note {
 
 	static delete = async (noteId: string) => {
 		await db('notes').del().where({ note_id: noteId });
+	};
+
+	static moveToNewTask = async (
+		note: NoteModel,
+		taskId: string,
+		hours: number
+	) => {
+		const previousTaskId = note.taskId;
+		const previousTask = await Task.find({ task_id: previousTaskId });
+		if (!previousTask) {
+			throw new NotFoundError();
+		}
+
+		await Task.update(previousTaskId, {
+			hours: previousTask.hours - hours,
+			notes: previousTask.notes - 1
+		});
+
+		const newTask = await Task.find({ task_id: taskId });
+		if (!newTask) {
+			throw new NotFoundError();
+		}
+
+		await Task.update(taskId, {
+			hours: newTask.hours + hours,
+			notes: newTask.notes + 1
+		});
+
+		await Note.update(note.noteId, {
+			task_id: taskId
+		});
+	};
+
+	static moveToNewProject = async (
+		note: NoteModel,
+		projectId: string,
+		hours: number,
+		{
+			updateNoteTotals,
+			updateHours
+		}: { updateNoteTotals: boolean; updateHours: boolean }
+	) => {
+		const previousProjectId = note.projectId;
+		const previousProject = await Project.find({
+			project_id: previousProjectId
+		});
+		if (!previousProject) {
+			throw new NotFoundError();
+		}
+
+		await Project.update(previousProjectId, {
+			hours: updateHours
+				? previousProject.hours - hours
+				: previousProject.hours,
+			notes: updateNoteTotals
+				? previousProject.notes - 1
+				: previousProject.notes
+		});
+
+		const newProject = await Project.find({ project_id: projectId });
+		if (!newProject) {
+			throw new NotFoundError();
+		}
+
+		await Project.update(projectId, {
+			hours: updateHours ? newProject.hours + hours : newProject.hours,
+			notes: updateNoteTotals ? newProject.notes + 1 : newProject.notes
+		});
+
+		await Note.update(note.noteId, {
+			project_id: projectId
+		});
 	};
 }
 

@@ -1,5 +1,8 @@
 import { db } from '../db';
 import { ItemService } from '../util/ItemService';
+import { Note, NoteModel } from './Note';
+import { Project } from './Project';
+import { NotFoundError } from '../responses/errors/NotFoundError';
 
 export interface TaskModel {
 	taskId: number;
@@ -136,6 +139,83 @@ class Task {
 
 	static delete = async (taskId: string) => {
 		await db('tasks').del().where({ task_id: taskId });
+	};
+
+	static moveToNewProject = async (task: TaskModel, projectId: string) => {
+		const previousProjectId = task.projectId;
+		const previousProject = await Project.find({
+			project_id: previousProjectId
+		});
+		if (!previousProject) {
+			throw new NotFoundError();
+		}
+
+		await Project.update(previousProjectId, {
+			tasks: previousProject.tasks - 1,
+			notes: previousProject.notes - task.notes,
+			hours: previousProject.hours - task.hours
+		});
+
+		const newProject = await Project.find({ project_id: projectId });
+		if (!newProject) {
+			throw new NotFoundError();
+		}
+
+		const taskNoteArray = await Note.findAll({ task_id: task.taskId });
+		for (const note of taskNoteArray) {
+			Note.moveToNewProject(note, projectId, note.hours, {
+				updateNoteTotals: false,
+				updateHours: false
+			});
+		}
+
+		await Project.update(projectId, {
+			tasks: newProject.tasks + 1,
+			notes: newProject.notes + task.notes,
+			hours: newProject.hours + task.hours
+		});
+
+		await Task.update(task.taskId, {
+			project_id: projectId
+		});
+	};
+
+	static complete = async (task: TaskModel, completedBy: string) => {
+		if (task.completedOn === null) {
+			await Task.update(task.taskId, {
+				completed_on: new Date().toISOString(),
+				completed_by: completedBy
+			});
+		} else {
+			await Task.update(task.taskId, {
+				completed_on: null,
+				completed_by: null
+			});
+		}
+	};
+
+	static completeChildNotes = async (task: TaskModel, notes: NoteModel[]) => {
+		if (task.completedOn === null) {
+			// Flag child items as complete, but differentiate from user completion
+			notes.map(async note => {
+				if (note.completedOn === null) {
+					await Note.update(note.noteId, {
+						completed_on: new Date().toISOString(),
+						completed_by: 'task'
+					});
+				}
+			});
+		} else {
+			// Remove completion status from task complete request
+			notes.map(async note => {
+				if (note.completedBy === 'task') {
+					await Note.update(note.noteId, {
+						completed_on: null,
+						completed_by: null
+					});
+				}
+			});
+		}
 	};
 }
 

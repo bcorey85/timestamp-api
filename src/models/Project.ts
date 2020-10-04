@@ -1,4 +1,6 @@
 import { db } from '../db';
+import { Note, NoteModel } from './Note';
+import { Task, TaskModel } from './Task';
 
 export interface ProjectModel {
 	projectId: number;
@@ -121,6 +123,74 @@ class Project {
 
 	static delete = async (projectId: string) => {
 		await db('projects').del().where({ project_id: projectId });
+	};
+
+	static complete = async (project: ProjectModel) => {
+		if (project.completedOn === null) {
+			await Project.update(project.projectId, {
+				completed_on: new Date().toISOString(),
+				completed_by: 'user'
+			});
+		} else {
+			await Project.update(project.projectId, {
+				completed_on: null,
+				completed_by: null
+			});
+		}
+	};
+
+	static completeChildTasks = async (
+		project: ProjectModel,
+		childTasks: TaskModel[]
+	) => {
+		if (project.completedOn === null) {
+			// Flag child items as complete, but differentiate from user completion
+			childTasks.map(async task => {
+				if (task.completedBy === null) {
+					await Task.update(task.taskId, {
+						completed_on: new Date().toISOString(),
+						completed_by: 'project'
+					});
+				}
+			});
+		} else {
+			// Remove completion status from project complete request
+			childTasks.map(async task => {
+				if (task.completedBy === 'project') {
+					await Task.update(task.taskId, {
+						completed_on: null,
+						completed_by: null
+					});
+				}
+			});
+		}
+	};
+
+	static completeChildNotes = async (
+		project: ProjectModel,
+		childNotes: NoteModel[]
+	) => {
+		if (project.completedOn === null) {
+			// Flag child items as complete, but differentiate from user completion
+			childNotes.map(async note => {
+				if (note.completedBy === null) {
+					await Note.update(note.noteId, {
+						completed_on: new Date().toISOString(),
+						completed_by: 'project'
+					});
+				}
+			});
+		} else {
+			childNotes.map(async note => {
+				// Remove completion status from project complete request
+				if (note.completedBy === 'project') {
+					await Note.update(note.noteId, {
+						completed_on: null,
+						completed_by: null
+					});
+				}
+			});
+		}
 	};
 }
 
