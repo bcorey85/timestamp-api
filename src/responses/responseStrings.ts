@@ -9,7 +9,8 @@ export const authMessage = {
 	error: {
 		emailInUse: 'Please try new credentials',
 		badResetRequest: 'Please try your password reset request again',
-		invalidCredentials: 'Please try new credentials'
+		invalidCredentials: 'Please try new credentials',
+		passwordConfirm: 'Passwords do not match.'
 	}
 };
 

@@ -1,7 +1,8 @@
 import { body, param, Meta } from 'express-validator';
 import {
 	requestValidationMessage,
-	createMessage
+	createMessage,
+	authMessage
 } from '../responses/responseStrings';
 import { User } from '../models/User';
 
@@ -13,6 +14,16 @@ export const passwordRequired = body('password')
 	.trim()
 	.isLength({ min: 6 })
 	.withMessage(requestValidationMessage.error.password);
+
+export const passwordConfirm = body('passwordConfirm')
+	.trim()
+	.custom((confirmPassword, meta: Meta) => {
+		if (confirmPassword !== meta.req.body.password) {
+			throw new Error(authMessage.error.passwordConfirm);
+		}
+
+		return true;
+	});
 
 export const userIdParamRequired = param('userId')
 	.notEmpty()

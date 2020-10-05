@@ -6,14 +6,18 @@ import {
 	forgotPassword,
 	resetPassword
 } from '../controllers/auth';
-import { emailRequired, passwordRequired } from '../validators';
+import {
+	emailRequired,
+	passwordConfirm,
+	passwordRequired
+} from '../validators';
 import { updateUserPassword } from '../validators';
 
 const router = express.Router();
 
 router.post(
 	'/signup',
-	[ emailRequired, passwordRequired ],
+	[ emailRequired, passwordRequired, passwordConfirm ],
 	validateRequest,
 	signup
 );

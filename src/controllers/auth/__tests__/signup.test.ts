@@ -10,7 +10,8 @@ describe('Signup Controller', () => {
 	it('creates new user in database and sends success object', async () => {
 		const user = {
 			email: 'test@gmail.com',
-			password: '123456'
+			password: '123456',
+			passwordConfirm: '123456'
 		};
 		const response = await request(app)
 			.post('/api/auth/signup')
@@ -31,7 +32,8 @@ describe('Signup Controller', () => {
 
 		const user = {
 			email: 'test@gmail.com',
-			password: '123456'
+			password: '123456',
+			passwordConfirm: '123456'
 		};
 
 		const response = await request(app)
@@ -51,7 +53,8 @@ describe('Signup Controller', () => {
 	it('throws error if invalid email', async () => {
 		const user = {
 			email: 'test',
-			password: '123456'
+			password: '123456',
+			passwordConfirm: '123456'
 		};
 		const response = await request(app)
 			.post('/api/auth/signup')
@@ -71,7 +74,8 @@ describe('Signup Controller', () => {
 	it('throws error if invalid password', async () => {
 		const user = {
 			email: 'test@gmail.com',
-			password: '123'
+			password: '123',
+			passwordConfirm: '123456'
 		};
 		const response = await request(app)
 			.post('/api/auth/signup')
@@ -81,6 +85,27 @@ describe('Signup Controller', () => {
 		expect(response.body.success).toBe(false);
 		expect(response.body.errors[0].message).toEqual(
 			requestValidationMessage.error.password
+		);
+		expect(response.body).not.toHaveProperty('data');
+
+		const users = await User.findAll();
+		expect(users.length).toEqual(0);
+	});
+
+	it('throws error if passwords dont match', async () => {
+		const user = {
+			email: 'test@gmail.com',
+			password: '123456',
+			passwordConfirm: '123455'
+		};
+		const response = await request(app)
+			.post('/api/auth/signup')
+			.send(user)
+			.expect(400);
+
+		expect(response.body.success).toBe(false);
+		expect(response.body.errors[0].message).toEqual(
+			authMessage.error.passwordConfirm
 		);
 		expect(response.body).not.toHaveProperty('data');
 
