@@ -8,7 +8,8 @@ import { validateRequest } from '../middleware/validateRequest';
 import {
 	userIdParamRequired,
 	updateUserPassword,
-	updateUserEmail
+	updateUserEmail,
+	updateUserPasswordConfirm
 } from '../validators';
 import { authUser } from '../middleware/authUser';
 
@@ -24,7 +25,12 @@ router.get(
 
 router.put(
 	'/:userId',
-	[ userIdParamRequired, updateUserPassword, updateUserEmail ],
+	[
+		userIdParamRequired,
+		updateUserPassword,
+		updateUserPasswordConfirm,
+		updateUserEmail
+	],
 	validateRequest,
 	authUser,
 	updateUserById

@@ -19,7 +19,7 @@ export const passwordConfirm = body('passwordConfirm')
 	.trim()
 	.custom((confirmPassword, meta: Meta) => {
 		if (confirmPassword !== meta.req.body.password) {
-			throw new Error(authMessage.error.passwordConfirm);
+			throw new Error(requestValidationMessage.error.passwordNotMatch);
 		}
 
 		return true;
@@ -46,12 +46,21 @@ export const updateUserPassword = body(
 	'password'
 ).custom((password, meta: Meta) => {
 	if (password || password === '') {
-		if (password !== meta.req.body.passwordConfirm) {
-			throw new Error(requestValidationMessage.error.passwordNotMatch);
-		}
-
 		if (password.length < 6) {
 			throw new Error(requestValidationMessage.error.password);
+		}
+	}
+
+	return true;
+});
+
+export const updateUserPasswordConfirm = body(
+	'passwordConfirm'
+).custom((passwordConfirm, meta: Meta) => {
+	const password = meta.req.body.password;
+	if (password) {
+		if (password !== passwordConfirm) {
+			throw new Error(requestValidationMessage.error.passwordNotMatch);
 		}
 	}
 

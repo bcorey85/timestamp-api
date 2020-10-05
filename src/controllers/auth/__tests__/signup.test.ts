@@ -105,7 +105,7 @@ describe('Signup Controller', () => {
 
 		expect(response.body.success).toBe(false);
 		expect(response.body.errors[0].message).toEqual(
-			authMessage.error.passwordConfirm
+			requestValidationMessage.error.passwordNotMatch
 		);
 		expect(response.body).not.toHaveProperty('data');
 
