@@ -28,7 +28,7 @@ class UserService {
 		const note = await Note.create({
 			title: "I'm a Note",
 			description:
-				'Notes allow you to input daily progress towards your goals. They track how much time that you invest each day and document your growth.',
+				'Notes allow you to input daily progress towards your goals. They track how much time you invest each day and document your growth.',
 			pinned: true,
 			projectId: project.projectId.toString(),
 			taskId: task.taskId.toString(),
