@@ -8,7 +8,7 @@ export type itemArray = ProjectModel[] | TaskModel[] | NoteModel[];
 class UserService {
 	static getTutorialData = async (userId: string) => {
 		const project = await Project.create({
-			title: 'Demo Project',
+			title: "I'm a Project",
 			description:
 				'Projects are the "big goals" of Timestamp. Start by creating one for any long-term goal that you want to achieve and get to work!',
 			pinned: true,
@@ -16,7 +16,7 @@ class UserService {
 		});
 
 		const task = await Task.create({
-			title: 'Demo Task',
+			title: "I'm a Task",
 			description:
 				'Tasks divide your Project into bite-sized chunks. They can help you stay organized, focused, and motivated to achieve your goals.',
 			pinned: true,
@@ -26,7 +26,7 @@ class UserService {
 		});
 
 		const note = await Note.create({
-			title: 'Demo Note',
+			title: "I'm a Note",
 			description:
 				'Notes allow you to input daily progress towards your goals. They track how much time that you invest each day and document your growth.',
 			pinned: true,
