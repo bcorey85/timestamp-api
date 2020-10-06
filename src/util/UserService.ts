@@ -10,7 +10,7 @@ class UserService {
 		const project = await Project.create({
 			title: 'Demo Project',
 			description:
-				'Projects are the "big goals" of Timestamp. Start by creating a project for any long term goal that you want to achieve and get to work!',
+				'Projects are the "big goals" of Timestamp. Start by creating one for any long-term goal that you want to achieve and get to work!',
 			pinned: true,
 			userId
 		});
@@ -18,7 +18,7 @@ class UserService {
 		const task = await Task.create({
 			title: 'Demo Task',
 			description:
-				'Tasks help divide projects into more manageable chunks. This can help you stay organized and focused on achieving your goals.',
+				'Tasks divide your Project into bite-sized chunks. They can help you stay organized, focused, and motivated to achieve your goals.',
 			pinned: true,
 			projectId: project.projectId.toString(),
 			tags: [ '#demo', '#task', '#tags' ],
@@ -39,18 +39,18 @@ class UserService {
 			userId
 		});
 
-		await Project.update(project.projectId, {
+		const updatedProject = await Project.update(project.projectId, {
 			notes: 1,
 			tasks: 1,
 			hours: 1
 		});
 
-		await Task.update(task.taskId, {
+		const updatedTask = await Task.update(task.taskId, {
 			notes: 1,
 			hours: 1
 		});
 
-		return { project, task, note };
+		return { project: updatedProject, task: updatedTask, note };
 	};
 
 	static getUserData = async (userId: string) => {
