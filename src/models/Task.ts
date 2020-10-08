@@ -10,14 +10,14 @@ export interface TaskModel {
 	userId: number;
 	title: string;
 	description: string;
-	tags: string[];
+	tags: string;
 	pinned: boolean;
 	notes: number;
 	hours: number;
 	createdAt: Date;
 	updatedAt: Date;
-	completedOn: Date;
-	completedBy: string;
+	completedOn: Date | null;
+	completedBy: string | null;
 }
 
 export interface NewTask {

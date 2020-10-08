@@ -20,7 +20,7 @@ const getUserById = async (req: Request, res: Response) => {
 	const secondsSinceCreation =
 		(new Date().getTime() - user.createdAt.getTime()) / 1000;
 
-	const isInitialLogin = secondsSinceCreation < 2;
+	const isInitialLogin = secondsSinceCreation < 4;
 
 	let projects, notes, tasks;
 	if (isInitialLogin) {

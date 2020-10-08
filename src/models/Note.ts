@@ -18,8 +18,8 @@ export interface NoteModel {
 	pinned: boolean;
 	createdAt: Date;
 	updatedAt: Date;
-	completedOn: Date;
-	completedBy: string;
+	completedOn: Date | null;
+	completedBy: string | null;
 }
 
 export interface NewNote {

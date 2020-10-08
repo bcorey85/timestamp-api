@@ -13,8 +13,8 @@ export interface ProjectModel {
 	hours: number;
 	createdAt: Date;
 	updatedAt: Date;
-	completedOn: Date;
-	completedBy: string;
+	completedOn: Date | null;
+	completedBy: string | null;
 }
 
 export interface NewProject {
