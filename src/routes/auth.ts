@@ -9,7 +9,8 @@ import {
 import {
 	emailRequired,
 	passwordConfirm,
-	passwordRequired
+	passwordRequired,
+	updateUserPasswordConfirm
 } from '../validators';
 import { updateUserPassword } from '../validators';
 
@@ -38,7 +39,7 @@ router.post(
 
 router.put(
 	'/reset-password/:resetToken',
-	[ updateUserPassword ],
+	[ updateUserPassword, updateUserPasswordConfirm ],
 	validateRequest,
 	resetPassword
 );

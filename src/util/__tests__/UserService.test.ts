@@ -61,9 +61,9 @@ describe('UserService', () => {
 
 		const tutorialData = await UserService.getTutorialData(userId);
 
-		expect(tutorialData.project.title).toEqual('Demo Project');
-		expect(tutorialData.task.title).toEqual('Demo Task');
-		expect(tutorialData.note.title).toEqual('Demo Note');
+		expect(tutorialData.project.title).toEqual("I'm a Project");
+		expect(tutorialData.task.title).toEqual("I'm a Task");
+		expect(tutorialData.note.title).toEqual("I'm a Note");
 	});
 
 	it('loads user data if not first login', async () => {
