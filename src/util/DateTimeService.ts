@@ -1,6 +1,13 @@
+import moment from 'moment';
+
 class DateTimeService {
 	static getHours = (startDate: Date, endDate: Date) => {
-		return Math.abs(startDate.getTime() - endDate.getTime()) / 3600000;
+		const start = moment(startDate);
+		const end = moment(endDate);
+
+		const duration = moment.duration(start.diff(end)).asHours();
+
+		return Math.abs(duration);
 	};
 
 	static parse = (date: string) => {
