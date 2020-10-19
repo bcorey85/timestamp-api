@@ -24,9 +24,11 @@ Test - npm run test
 ## Frontend Source Code
 https://github.com/bcorey85/timestamp-frontend
 
-
 ## Deployment Link
 https://timestampapp.vercel.app/
+
+## Author
+Brandon Corey - https://www.bcdev.co/
 
 
 
