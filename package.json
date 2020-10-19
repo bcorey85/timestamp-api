@@ -1,7 +1,9 @@
 {
-	"name": "timestamp",
+	"name": "timestamp-api",
 	"version": "1.0.0",
-	"description": "notes and productivity app",
+	"description": "Notes and productivity app geared towards efficient learning",
+	"homepage": "timestampapp.vercel.app",
+	"author": "Brandon Corey <brandon@bcdev.co> (www.bcdev.co)",
 	"main": "index.js",
 	"scripts": {
 		"test": "env-cmd -f ./src/config/test.env jest --runInBand",
@@ -16,8 +18,6 @@
 		"setupFilesAfterEnv": [ "./src/test/setup.ts" ],
 		"testPathIgnorePatterns": [ "./build" ]
 	},
-	"author": "",
-	"license": "ISC",
 	"dependencies": {
 		"@sendgrid/mail": "^7.2.3",
 		"bcryptjs": "^2.4.3",
