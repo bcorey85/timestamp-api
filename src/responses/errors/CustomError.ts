@@ -5,6 +5,11 @@ abstract class CustomError extends Error {
 
 	constructor(message: string) {
 		super(message);
+
+		// Typescript hack to set prototype explicitly due to issues with subclassing Error
+		// https://stackoverflow.com/questions/41102060/typescript-extending-error-class/41102306#41102306
+		// Required for errorHandler middleware to catch custom errors and format before
+		// sending response
 		Object.setPrototypeOf(this, CustomError.prototype);
 	}
 
